@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/demodb
+    username: teamapp
+    password: teamapp
+    driver-class-name: org.postgresql.Driver
+    # type: org.apache.commons.dbcp2.BasicDataSource

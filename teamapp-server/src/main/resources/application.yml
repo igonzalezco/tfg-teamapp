@@ -1,0 +1,38 @@
+info:
+  app:
+    name: teamapp
+    description: Aplicación para la gestión de equipos deportivos amateur
+  build:
+    goupId: @project.groupId@
+    artifact: @project.artifactId@
+    name: @project.name@
+    version: @project.version@
+
+server:
+  port: 9091
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    path: /swagger-ui-teamapp.html
+
+spring:
+  application:
+    name: Teamapp
+  jpa:
+    open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    generate-ddl: true  
+    hibernate:
+      ddl-auto: update 
+  profiles:
+    active: @activeProfile@
+
+app:
+  envars:
+    jwt:
+      token: n2r5u8x/A%D^*G-KaPdSgVkYp3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf
+      expires: 2700000
+    rest:
+      enabled: true

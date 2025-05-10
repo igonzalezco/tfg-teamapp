@@ -1,0 +1,50 @@
+services:
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    user: root
+    ports:
+      - "8081:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./shared:/srv/demo
+    networks:
+      - cicd
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: teamapp
+      POSTGRES_PASSWORD: teamapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./teamapp-db/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh:ro
+      - ./teamapp-db/create/teamapp.sql:/docker-entrypoint-initdb.d/teamapp.sql:ro
+    networks:
+      - cicd
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./shared:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - jenkins
+    networks:
+      - cicd
+
+volumes:
+  jenkins_home:
+  postgres_data:
+
+networks:
+  cicd:
+    driver: bridge
