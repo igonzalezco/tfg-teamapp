@@ -36,20 +36,20 @@ public class Convocatoria extends AuditableEntity implements Serializable, BaseE
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "convocatoria_id_generator", sequenceName = "sq_convocatoria_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "convocatoria_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "convocatoria_seq")
-    @SequenceGenerator(name = "convocatoria_seq", sequenceName = "convocatoria_seq", allocationSize = 1)
     private Integer id;
 
     @Column(name = "asiste")
     private Boolean asiste;
 
-    @JoinColumn(name = "evento", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evento_id", referencedColumnName = "id", nullable = false)
     private Evento evento;
 
-    @JoinColumn(name = "jugador", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "jugador_id", referencedColumnName = "id", nullable = false)
     private Jugador jugador;
 
 }

@@ -40,9 +40,9 @@ public class Jugador extends AuditableEntity implements Serializable, BaseEntity
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "jugador_id_generator", sequenceName = "sq_jugador_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jugador_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jugador_seq")
-    @SequenceGenerator(name = "jugador_seq", sequenceName = "jugador_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
@@ -52,16 +52,16 @@ public class Jugador extends AuditableEntity implements Serializable, BaseEntity
     @Column(name = "dorsal")
     private Integer dorsal;
 
-    @JoinColumn(name = "equipo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id", referencedColumnName = "id", nullable = false)
     private Equipo equipo;
 
-    @JoinColumn(name = "posicion", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "posicion_id", referencedColumnName = "id")
     private Posicion posicion;
 
-    @JoinColumn(name = "usuario", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "jugador", fetch = FetchType.LAZY)

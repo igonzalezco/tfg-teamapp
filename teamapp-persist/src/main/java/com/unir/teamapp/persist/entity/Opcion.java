@@ -39,16 +39,16 @@ public class Opcion extends AuditableEntity implements Serializable, BaseEntityI
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "opcion_id_generator", sequenceName = "sq_opcion_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "opcion_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "opcion_seq")
-    @SequenceGenerator(name = "opcion_seq", sequenceName = "opcion_seq", allocationSize = 1)
     private Integer id;
 
-    @JoinColumn(name = "encuesta", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "encuesta_id", referencedColumnName = "id", nullable = false)
     private Encuesta encuesta;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "Opcion", fetch = FetchType.LAZY)
+    @OneToMany(cascade= CascadeType.ALL, mappedBy = "opcion", fetch = FetchType.LAZY)
     private List<Respuesta> respuestas;
 
 }

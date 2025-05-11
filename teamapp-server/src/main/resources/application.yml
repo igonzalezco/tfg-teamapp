@@ -32,7 +32,7 @@ spring:
 app:
   envars:
     jwt:
-      token: n2r5u8x/A%D^*G-KaPdSgVkYp3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRf
+      token: 9cf8baf9f21803be97a8753c0af51f10b1fd30cecb655f740f19e44fb142edf0
       expires: 2700000
     rest:
       enabled: true

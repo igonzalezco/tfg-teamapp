@@ -41,9 +41,9 @@ public class Evento extends AuditableEntity implements Serializable, BaseEntityI
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "evento_id_generator", sequenceName = "sq_evento_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "evento_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "evento_seq")
-    @SequenceGenerator(name = "evento_seq", sequenceName = "evento_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
@@ -53,11 +53,14 @@ public class Evento extends AuditableEntity implements Serializable, BaseEntityI
     @Column(name = "fecha_evento", nullable = false)
     private LocalDateTime fechaEvento;
 
-    @JoinColumn(name = "equipo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id", referencedColumnName = "id", nullable = false)
     private Equipo equipo;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "evento", fetch = FetchType.LAZY)
     private List<Convocatoria> convocatorias;
+
+    @OneToMany(cascade= CascadeType.ALL, mappedBy = "evento", fetch = FetchType.LAZY)
+    private List<Necesidad> necesidades;
 
 }

@@ -37,21 +37,21 @@ public class Comentario extends AuditableEntity implements Serializable, BaseEnt
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "comentario_id_generator", sequenceName = "sq_comentario_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comentario_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comentario_seq")
-    @SequenceGenerator(name = "comentario_seq", sequenceName = "comentario_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
     @Column(name = "texto")
     private String texto;
 
-    @JoinColumn(name = "noticia", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "noticia_id", referencedColumnName = "id", nullable = false)
     private Noticia noticia;
 
-    @JoinColumn(name = "usuario", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
 
 }

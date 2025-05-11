@@ -6,11 +6,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.unir.teamapp.mapping.UserDetailsMapper;
+import com.unir.teamapp.persist.entity.Usuario;
+import com.unir.teamapp.persist.repository.jpa.UsuarioRepository;
+
+import lombok.RequiredArgsConstructor;
+
 @Service("userDetailsService")
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    
+    private final UsuarioRepository usuarioRepository;
+
     /** 
      * @param username
      * @return UserDetails
@@ -18,8 +26,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadUserByUsername'");
+        final Usuario retrievedUser = usuarioRepository.findByLoginWithRol(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No se ha encontrado el usuario con nombre: " + username));
+        return UserDetailsMapper.build(retrievedUser);
     }
 
 }

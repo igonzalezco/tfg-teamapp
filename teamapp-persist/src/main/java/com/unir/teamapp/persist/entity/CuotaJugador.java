@@ -37,9 +37,9 @@ public class CuotaJugador extends BaseEntity implements Serializable, BaseEntity
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "cuota_jugador_id_generator", sequenceName = "sq_cuota_jugador_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cuota_jugador_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cuota_jugador_seq")
-    @SequenceGenerator(name = "cuota_jugador_seq", sequenceName = "cuota_jugador_seq", allocationSize = 1)
     private Integer id;
 
     @Column(name = "pagada")
@@ -48,12 +48,12 @@ public class CuotaJugador extends BaseEntity implements Serializable, BaseEntity
     @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago;
 
-    @JoinColumn(name = "cuota", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cuota_id", referencedColumnName = "id", nullable = false)
     private Cuota cuota;
 
-    @JoinColumn(name = "equipo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Jugador Jugador;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "jugador_id", referencedColumnName = "id", nullable = false)
+    private Jugador jugador;
 
 }

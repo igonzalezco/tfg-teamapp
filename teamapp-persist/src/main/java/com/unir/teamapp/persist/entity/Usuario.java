@@ -15,6 +15,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -34,7 +36,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder(toBuilder = true)
-@UniqueEntity(fields = { FieldConstants.EMAIL })
+@UniqueEntity(fields = FieldConstants.EMAIL )
 public class Usuario extends AuditableEntity implements Serializable, BaseEntityId<Integer> {
 
     @Serial
@@ -42,9 +44,9 @@ public class Usuario extends AuditableEntity implements Serializable, BaseEntity
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "usuario_id_generator", sequenceName = "sq_usuario_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
-    @SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
@@ -59,7 +61,11 @@ public class Usuario extends AuditableEntity implements Serializable, BaseEntity
     @NotNull
     @Column(name = "password")
     private String password;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rol_id", referencedColumnName = "id", nullable = false)
+    private Rol rol;
+    
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<UsuarioEquipo> usuarioEquipos;
 }

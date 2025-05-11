@@ -38,9 +38,9 @@ public class Equipo extends AuditableEntity implements Serializable, BaseEntityI
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "equipo_id_generator", sequenceName = "sq_equipo_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipo_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipo_seq")
-    @SequenceGenerator(name = "equipo_seq", sequenceName = "equipo_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull

@@ -37,20 +37,20 @@ public class Respuesta extends AuditableEntity implements Serializable, BaseEnti
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "respuesta_id_generator", sequenceName = "sq_respuesta_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "respuesta_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "respuesta_seq")
-    @SequenceGenerator(name = "respuesta_seq", sequenceName = "respuesta_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
     @Column(name = "valor")
     private Boolean valor;
 
-    @JoinColumn(name = "opcion", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "opcion_id", referencedColumnName = "id", nullable = false)
     private Opcion opcion;
 
-    @JoinColumn(name = "usuario", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
 }

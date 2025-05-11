@@ -3,6 +3,7 @@ package com.unir.teamapp.persist.entity;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Basic;
@@ -41,9 +42,9 @@ public class Cuota extends AuditableEntity implements Serializable, BaseEntityId
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "cuota_id_generator", sequenceName = "sq_cuota_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cuota_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cuota_seq")
-    @SequenceGenerator(name = "cuota_seq", sequenceName = "cuota_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
@@ -53,8 +54,11 @@ public class Cuota extends AuditableEntity implements Serializable, BaseEntityId
     @Column(name = "cantidad", precision = 10, scale = 2)
     private BigDecimal cantidad;
 
-    @JoinColumn(name = "equipo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @Column(name = "fecha_fin")
+    private LocalDateTime fecha_fin;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id", referencedColumnName = "id", nullable = false)
     private Equipo equipo;
 
     @OneToMany(cascade= CascadeType.ALL, mappedBy = "cuota", fetch = FetchType.LAZY)

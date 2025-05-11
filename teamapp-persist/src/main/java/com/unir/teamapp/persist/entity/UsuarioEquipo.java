@@ -36,21 +36,21 @@ public class UsuarioEquipo extends BaseEntity implements Serializable, BaseEntit
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "usuario_equipo_id_generator", sequenceName = "sq_usuario_equipo_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_equipo_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_equipo_seq")
-    @SequenceGenerator(name = "usuario_equipo_seq", sequenceName = "usuario_equipo_seq", allocationSize = 1)
     private Integer id;
 
-    @JoinColumn(name = "usuario", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
 
-    @JoinColumn(name = "equipo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id", referencedColumnName = "id", nullable = false)
     private Equipo equipo;
 
-    @JoinColumn(name = "rol", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Rol rol;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "permiso_id", referencedColumnName = "id", nullable = false)
+    private Permiso permiso;
 
 }

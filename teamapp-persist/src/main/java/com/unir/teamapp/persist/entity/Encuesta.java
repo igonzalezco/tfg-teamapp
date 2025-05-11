@@ -40,9 +40,9 @@ public class Encuesta extends AuditableEntity implements Serializable, BaseEntit
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "encuesta_id_generator", sequenceName = "sq_encuesta_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "encuesta_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "encuesta_seq")
-    @SequenceGenerator(name = "encuesta_seq", sequenceName = "encuesta_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull
@@ -55,11 +55,11 @@ public class Encuesta extends AuditableEntity implements Serializable, BaseEntit
     @Column(name = "multiple")
     private Boolean multiple;
 
-    @JoinColumn(name = "equipo", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id", referencedColumnName = "id", nullable = false)
     private Equipo equipo;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "Encuesta", fetch = FetchType.LAZY)
+    @OneToMany(cascade= CascadeType.ALL, mappedBy = "encuesta", fetch = FetchType.LAZY)
     private List<Opcion> opciones;
 
 }

@@ -3,6 +3,9 @@ package com.unir.teamapp.persist.entity;
 import java.io.Serial;
 import java.io.Serializable;
 
+import com.unir.teamapp.persist.annotation.UniqueEntity;
+import com.unir.teamapp.persist.util.FieldConstants;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,16 +30,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder(toBuilder = true)
+@UniqueEntity(fields = FieldConstants.CODIGO)
 public class Rol extends BaseEntity implements Serializable, BaseEntityId<Integer> {
 
     @Serial
-    private static final long serialVersionUID = 7669856742523510860L;
+    private static final long serialVersionUID = 7669857536823510860L;
 
     @Id
     @Basic(optional = false)
+    @SequenceGenerator(name = "rol_id_generator", sequenceName = "sq_rol_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rol_id_generator")
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rol_seq")
-    @SequenceGenerator(name = "rol_seq", sequenceName = "rol_seq", allocationSize = 1)
     private Integer id;
 
     @NotNull

@@ -2,16 +2,20 @@ package com.unir.teamapp.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.unir.teamapp.api.util.AppConstants;
+import com.unir.teamapp.service.util.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -31,8 +36,8 @@ public class SecurityConfig {
      * @return JWTAuthorizationFilter
      */
     @Bean
-    public JWTAuthorizationFilter jwtAuthorizationFilter() {
-        return new JWTAuthorizationFilter();
+    JWTAuthorizationFilter jwtAuthorizationFilter(final UserDetailsService userDetailsService, final JwtUtil jwtUtil) {
+        return new JWTAuthorizationFilter(userDetailsService, jwtUtil);
     }
 
     
@@ -40,11 +45,11 @@ public class SecurityConfig {
      * @return PasswordEncoder
      */
     @Bean
-    public PasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Primary
+    PasswordEncoder passwordEncoder() {
+        return new CustomSHAPasswordEncoder();
     }
-
-    
+   
     /** 
      * @param http
      * @param authManager
@@ -52,9 +57,9 @@ public class SecurityConfig {
      * @throws Exception
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
+    SecurityFilterChain securityFilterChain(final HttpSecurity http, AuthenticationManager authManager, final JWTAuthorizationFilter jwtAuthorizationFilter) throws Exception {
+        http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
             .requestMatchers(
                 AppConstants.URL_SWAGGER_API_DOCS,
                 AppConstants.URL_SWAGGER_UI,
@@ -64,10 +69,18 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, AppConstants.URL_AUTH_LOGIN).permitAll()
             .requestMatchers(HttpMethod.POST, AppConstants.URL_AUTH_REGISTER).permitAll()
             .anyRequest().authenticated()
-        ).addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+        ).addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationManager(authManager);
+        .authenticationManager(authManager)
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable());
+
         return http.build();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     
@@ -75,7 +88,7 @@ public class SecurityConfig {
      * @return CorsConfigurationSource
      */
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 
@@ -88,26 +101,30 @@ public class SecurityConfig {
     * @return DaoAuthenticationProvider
     */
    @Bean
-    public DaoAuthenticationProvider getDaoAuthProvider(final UserDetailsService userDetailsService) {
+    DaoAuthenticationProvider getDaoAuthProvider(final UserDetailsService userDetailsService) {
         final DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(bCryptPasswordEncoder());
+        provider.setPasswordEncoder(passwordEncoder());
 
         return provider;
     }
 
-    
     /** 
-     * @param http
-     * @param customProvider
-     * @return AuthenticationManager
-     * @throws Exception
+     * @return PermissionEvaluator
      */
     @Bean
-    public AuthenticationManager authManager(final HttpSecurity http, final CustomAuthenticationProvider customProvider) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(customProvider);
+    PermissionEvaluator permissionEvaluator() {
+        return new CustomPermissionEvaluator();
+    }
 
-        return authenticationManagerBuilder.build();
+    
+    /** 
+     * @return MethodSecurityExpressionHandler
+     */
+    @Bean
+    MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+        final DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(permissionEvaluator());
+        return expressionHandler;
     }
 }

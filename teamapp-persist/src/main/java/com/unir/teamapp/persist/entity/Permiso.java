@@ -3,6 +3,9 @@ package com.unir.teamapp.persist.entity;
 import java.io.Serial;
 import java.io.Serializable;
 
+import com.unir.teamapp.persist.annotation.UniqueEntity;
+import com.unir.teamapp.persist.util.FieldConstants;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,22 +23,23 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "posicion")
+@Table(name = "permiso")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Builder(toBuilder = true)
-public class Posicion extends AuditableEntity implements Serializable, BaseEntityId<Integer> {
+@UniqueEntity(fields = FieldConstants.CODIGO)
+public class Permiso extends BaseEntity implements Serializable, BaseEntityId<Integer> {
 
     @Serial
-    private static final long serialVersionUID = 7354876984229874860L;
+    private static final long serialVersionUID = 7669856742523510860L;
 
     @Id
     @Basic(optional = false)
-    @SequenceGenerator(name = "posicion_id_generator", sequenceName = "sq_posicion_id", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posicion_id_generator")
+    @SequenceGenerator(name = "permiso_id_generator", sequenceName = "sq_permiso_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permiso_id_generator")
     @Column(name = "id")
     private Integer id;
 
@@ -45,5 +49,4 @@ public class Posicion extends AuditableEntity implements Serializable, BaseEntit
 
     @Column(name = "descripcion")
     private String descripcion;
-    
 }
