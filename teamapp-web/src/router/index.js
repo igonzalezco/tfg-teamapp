@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { authStore } from '@/stores/auth';
+import { isTokenExpired } from '@/utils/token';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
       redirect: {
         name: 'auth'
       }
@@ -34,6 +35,24 @@ const router = createRouter({
       ]
     }
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const auth = authStore();
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (auth.isLoggedIn && !isTokenExpired()) {
+      next();
+      return;
+    }
+    auth.logout;
+    next('/auth')
+  } else {
+    if (from.path == "/" && to.path == "/auth" && auth.isLoggedIn && !isTokenExpired()) {
+      next('/content/initContent');
+    } else {
+      next();
+    }
+  }
 })
 
 export default router

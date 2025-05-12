@@ -29,6 +29,10 @@ spring:
   profiles:
     active: @activeProfile@
 
+password:
+  restriction:
+    expression: ^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W\d])[A-Za-z\d\W]{8,}$
+
 app:
   envars:
     jwt:
