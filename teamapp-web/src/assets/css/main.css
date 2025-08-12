@@ -1,4 +1,5 @@
 @import './base.css';
+@import './team-app.css';
 
 .logo {
   width: 400px;
@@ -6,7 +7,7 @@
 }
 
 .auth {
-  background-image: url('fondo-auth.png');
+  background-image: url('../images/fondo-auth.png');
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;

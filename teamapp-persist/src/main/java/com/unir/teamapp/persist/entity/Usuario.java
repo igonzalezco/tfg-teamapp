@@ -50,10 +50,6 @@ public class Usuario extends AuditableEntity implements Serializable, BaseEntity
     private Integer id;
 
     @NotNull
-    @Column(name = "nombre")
-    private String nombre;
-
-    @NotNull
     @Column(name = "email", unique = true)
     private String email;
 

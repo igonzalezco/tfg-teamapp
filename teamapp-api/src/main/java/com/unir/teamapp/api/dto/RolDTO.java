@@ -1,6 +1,5 @@
 package com.unir.teamapp.api.dto;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,15 +19,14 @@ import lombok.ToString;
 @ToString
 @Builder
 @AllArgsConstructor
-public class TokenUsuarioRolesDTO extends BaseDTO implements Serializable {
+public class RolDTO extends BaseDTO implements Serializable { 
 
-    @Serial
-    private static final long serialVersionUID = -8956679464646874647L;
+    private static final long serialVersionUID = 7669128324523398460L;
 
-    private String token;
+    private Integer id;
 
-    private UsuarioVistaDTO usuario;
+    private String codigo;
 
-    private EquipoVistaDTO equipos;
+    private String descripcion;
 
 }

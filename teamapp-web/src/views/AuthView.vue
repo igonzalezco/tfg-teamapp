@@ -1,13 +1,13 @@
 <template>
     <body class="auth flex_div">
       <div class="auth-placeholder">
-        <img src="@/assets/logo-full.png" class="logo"/>
+        <img src="@/assets/images/logo-full.png" class="logo"/>
       </div>
       <div class="auth-form">
         <login-form/>
         <p style="margin-top: 1rem;">
-          ¿No tienes cuenta?
-          <el-link type="primary" @click="showRegister = !showRegister">Mostrar Registro</el-link>
+          {{ $t('auth.cuenta')}}
+          <el-link type="primary" @click="showRegister = !showRegister">{{ $t('auth.registro')}}</el-link>
         </p>
         <register-form v-if="showRegister" style="margin-top: 2rem;" />
       </div>

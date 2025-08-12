@@ -10,8 +10,8 @@ public class AppConstants {
     public static final String URL_SWAGGER_UI = "/swagger-ui/**";
     public static final String URL_SWAGGER_UI_CUSTOM = "/swagger-ui-teamapp.html";
     public static final String URL_PUBLIC = "/public";
-    public static final String URL_AUTH_LOGIN = "/login";
-    public static final String URL_AUTH_REGISTER = "/registro";
+    public static final String URL_AUTH_LOGIN = AppConstants.URL_BASE_PATH + "/login";
+    public static final String URL_AUTH_REGISTER = AppConstants.URL_BASE_PATH + "/registro";
 
 
     /** JWT token defaults **/

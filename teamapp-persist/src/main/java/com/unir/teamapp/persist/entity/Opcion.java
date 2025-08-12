@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,6 +44,10 @@ public class Opcion extends AuditableEntity implements Serializable, BaseEntityI
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "opcion_id_generator")
     @Column(name = "id")
     private Integer id;
+
+    @NotNull
+    @Column(name = "texto")
+    private String texto;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "encuesta_id", referencedColumnName = "id", nullable = false)

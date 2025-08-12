@@ -52,6 +52,7 @@ public class Encuesta extends AuditableEntity implements Serializable, BaseEntit
     @Column(name = "descripcion")
     private String descripcion;
 
+    @NotNull
     @Column(name = "multiple")
     private Boolean multiple;
 

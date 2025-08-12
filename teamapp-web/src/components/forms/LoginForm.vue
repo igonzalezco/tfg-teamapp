@@ -1,15 +1,15 @@
 <template>
   <el-form ref="loginFormRef" @submit.prevent="submitLogin" :model="usuario" :rules="rules" label-position="top">
-    <el-form-item label="Email" prop="email">
-      <el-input v-model="usuario.email" type="email" placeholder="Introduce tu email" />
+    <el-form-item :label="$t('login.email')" prop="email">
+      <el-input v-model="usuario.username" type="email" :placeholder="$t('login.placeholder.email')" />
     </el-form-item>
 
-    <el-form-item label="Contraseña" prop="password">
-      <el-input v-model="usuario.password" type="password" placeholder="Introduce tu contraseña" show-password />
+    <el-form-item :label="$t('login.password')" prop="password">
+      <el-input v-model="usuario.password" type="password" :placeholder="$t('login.placeholder.password')" show-password />
     </el-form-item>
 
     <el-form-item>
-      <el-button :disabled="disableEntrar" type="primary" @click="submitLogin">Iniciar sesión</el-button>
+      <el-button :disabled="disableEntrar" type="primary" @click="submitLogin">{{ $t('login.login') }}</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -23,12 +23,12 @@ export default {
   data() {
     return {
       usuario : {
-        email: '',
+        username: '',
         password: '',
       },
       rules: {
-        email: [{ required: true, message: 'El email es obligatorio', trigger: 'blur' }],
-        password: [{ required: true, message: 'La contraseña es obligatorio', trigger: 'blur' }],
+        username: [{ required: true, message: this.$t('login.rules.email'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('login.rules.password'), trigger: 'blur' }],
       },
       disableEntrar: false,
       auth: null,

@@ -12,7 +12,9 @@ import com.unir.teamapp.persist.repository.common.ComplexJpaRepository;
 @Repository("usuarioRepository")
 public interface UsuarioRepository extends ComplexJpaRepository<Usuario, Integer> {
 
+    Optional<Usuario> findByEmail(String email);
+
     @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.rol r WHERE u.email = :username")
-    Optional<Usuario> findByLoginWithRol(@Param("username") String username);
+    Optional<Usuario> findByEmailWithRol(@Param("username") String username);
 
 }

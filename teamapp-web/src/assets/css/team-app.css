@@ -1,0 +1,28 @@
+.flex_div {
+    display: flex;
+    flex: 1;
+}
+
+.page-content{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    position: fixed;
+    top: 186px;
+    bottom: 0;
+    width: inherit;
+}
+
+.img-menu {
+    width: 240px;
+    margin-left: 0px;
+}
+
+.dropdown-user {
+    margin-right: 20px;
+}
+
+.dropdown-user a:focus-visible {
+    outline: none;
+}

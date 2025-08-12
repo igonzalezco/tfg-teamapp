@@ -49,4 +49,7 @@ public class Permiso extends BaseEntity implements Serializable, BaseEntityId<In
 
     @Column(name = "descripcion")
     private String descripcion;
+
+    @Column(name = "prioridad")
+    private Integer prioridad;
 }

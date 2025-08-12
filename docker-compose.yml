@@ -24,7 +24,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./teamapp-db/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh:ro
-      - ./teamapp-db/create/teamapp.sql:/docker-entrypoint-initdb.d/teamapp.sql:ro
+      - ./teamapp-db/create/teamapp.sql:/sql/teamapp.sql:ro
+      - ./teamapp-db/populate/teamapp-populate.sql:/sql/teamapp-populate.sql:ro
     networks:
       - cicd
 

@@ -29,12 +29,6 @@ public class RegisterRequestDTO implements Serializable {
 
     private static final long serialVersionUID = -6982561564871354753L;
 
-    
-    @Valid
-    @NotBlank
-    @Size(min = 0, max = 100)
-    private String nombre;
-
     @NotBlank
     @Email
     @Size(min = 0, max = 100)

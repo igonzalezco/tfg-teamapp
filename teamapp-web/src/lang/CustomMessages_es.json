@@ -1,0 +1,42 @@
+{
+    "auth":{
+        "cuenta": "¿No tienes cuenta?",
+        "registro": "Mostrar Registro"
+    },
+    "login": {
+        "email": "Email",
+        "login": "Iniciar sesión",
+        "password": "Contraseña",
+        "placeholder": {
+            "email": "Introduce tu email",
+            "password": "Introduce tu contraseña"
+        },
+        "rules": {
+            "email": "El email es obligatorio",
+            "password": "La contraseña es obligatoria"
+        }
+    },
+    "mi-perfil": "Mi perfil",
+    "modal": {
+        "confirmar": "Confirmar",
+        "sesion": "¿Desea cerrar sesión?"
+    },
+    "register":{
+        "email": "Email",
+        "password": "Contraseña",
+        "passwordRepeat": "Confirmar contraseña",
+        "placeholder": {
+            "email": "Introduce un email",
+            "password": "Introduce una contraseña",
+            "passwordRepeat": "Repite la contraseña"
+        },
+        "register": "Registrarse",
+        "rules": {
+            "email": "El email es obligatorio",
+            "password": "La contraseña es obligatoria",
+            "passwordCompare": "Las contraseñas no coinciden",
+            "passwordConfirm": "Por favor, confirma tu contraseña",
+            "passwordFormat": "La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y un número o carácter especial"
+        }
+    }
+}
