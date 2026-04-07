@@ -8,4 +8,6 @@ import com.unir.teamapp.persist.repository.common.ComplexJpaRepository;
 @Repository("equipoRepository")
 public interface EquipoRepository extends ComplexJpaRepository<Equipo, Integer> {
 
+  Boolean existsByNombreIgnoreCase(String nombre);
+
 }
