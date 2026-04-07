@@ -1,18 +1,14 @@
-
 <template>
-  <div id="app" class="flex_div">
-    <notifications />
-    <RouterView />
+  <div id="app">
+    <notifications position="top-right" />
+    <router-view />
   </div>
 </template>
 
 <script>
-  import { RouterView } from 'vue-router'
-  
   export default {
-    name: 'App'
+    name: 'App',
   }
 </script>
 
-<style>
-</style>
+<style></style>

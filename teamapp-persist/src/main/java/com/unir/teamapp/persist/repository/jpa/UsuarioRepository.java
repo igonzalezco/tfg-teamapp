@@ -17,4 +17,6 @@ public interface UsuarioRepository extends ComplexJpaRepository<Usuario, Integer
     @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.rol r WHERE u.email = :username")
     Optional<Usuario> findByEmailWithRol(@Param("username") String username);
 
+    boolean existsByEmail(String email);
+
 }

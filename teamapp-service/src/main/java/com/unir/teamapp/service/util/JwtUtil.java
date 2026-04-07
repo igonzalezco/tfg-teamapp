@@ -36,7 +36,7 @@ public class JwtUtil {
         final SecretKey key = alg.key().build();
         final SecretKeySpec secretKeySpec = new SecretKeySpec(Decoders.BASE64.decode(secret), key.getAlgorithm());
         final JwtParser jwtParser = Jwts.parser().verifyWith(secretKeySpec).build();
-        return jwtParser.parseSignedClaims(token.replace(AppConstants.TOKEN_PREFIX, "")).getPayload();
+        return jwtParser.parseSignedClaims(token.replace(AppConstants.TOKEN_PREFIX, "").trim()).getPayload();
     }
 
     public Date getExpirationDateFromToken(final String token) {
@@ -48,10 +48,13 @@ public class JwtUtil {
     }
 
     public String doGenerateToken(final Authentication authentication, final String username) {
-        final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-        final JwtBuilder jwtBuilder = Jwts.builder().subject(username).signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret)))
-            .issuedAt(new Date(System.currentTimeMillis())).issuer(AppConstants.TOKEN_ISSUER).expiration(new Date(System.currentTimeMillis() + expirationTime));
-        
+        final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        final JwtBuilder jwtBuilder = Jwts.builder().subject(username)
+                .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret)))
+                .issuedAt(new Date(System.currentTimeMillis())).issuer(AppConstants.TOKEN_ISSUER)
+                .expiration(new Date(System.currentTimeMillis() + expirationTime));
+
         if (authorities != null && !authorities.isEmpty()) {
             jwtBuilder.claim("authorities", authorities);
         }

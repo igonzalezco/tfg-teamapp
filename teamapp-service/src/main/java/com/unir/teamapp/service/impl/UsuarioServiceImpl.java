@@ -17,19 +17,19 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
-    
+
     private final UsuarioRepository usuarioRepository;
 
     private final UsuarioMapper usuarioMapper;
 
-    @Override   
+    @Override
     public Optional<UsuarioVistaDTO> findUserByLogin(String login) {
         Optional<UsuarioVistaDTO> usuarioDTO = Optional.empty();
-        final Optional<Usuario> optionalUser = usuarioRepository.findByEmail(login);
-        if (optionalUser.isPresent()){
-            usuarioDTO = Optional.of(usuarioMapper.asUsuarioDTO(optionalUser.get()));
+        final Optional<Usuario> optionalUser = usuarioRepository.findByEmailWithRol(login);
+        if (optionalUser.isPresent()) {
+            usuarioDTO = Optional.of(usuarioMapper.asUsuarioVistaDTO(optionalUser.get()));
         }
-        
+
         return usuarioDTO;
     }
 

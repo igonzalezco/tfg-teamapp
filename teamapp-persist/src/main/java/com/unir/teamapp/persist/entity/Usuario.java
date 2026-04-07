@@ -4,9 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-import com.unir.teamapp.persist.annotation.UniqueEntity;
-import com.unir.teamapp.persist.util.FieldConstants;
-
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,6 +14,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -36,7 +36,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder(toBuilder = true)
-@UniqueEntity(fields = FieldConstants.EMAIL )
+@NamedEntityGraph(name = "findUserInfo", attributeNodes = {
+        @NamedAttributeNode(value = "usuarioEquipos", subgraph = "sub.usuarioEquipo") }, subgraphs = {
+                @NamedSubgraph(name = "sub.usuarioEquipo", attributeNodes = { @NamedAttributeNode(value = "equipo"),
+                        @NamedAttributeNode(value = "permiso") }) })
 public class Usuario extends AuditableEntity implements Serializable, BaseEntityId<Integer> {
 
     @Serial
@@ -57,11 +60,11 @@ public class Usuario extends AuditableEntity implements Serializable, BaseEntity
     @NotNull
     @Column(name = "password")
     private String password;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rol_id", referencedColumnName = "id", nullable = false)
     private Rol rol;
-    
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<UsuarioEquipo> usuarioEquipos;
 }

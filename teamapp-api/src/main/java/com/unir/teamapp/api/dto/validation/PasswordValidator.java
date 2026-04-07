@@ -22,7 +22,32 @@ public class PasswordValidator implements ConstraintValidator<ValidatePasswordCh
     
     @Override
     public boolean isValid(RegisterRequestDTO dto, ConstraintValidatorContext context) {
-        return StringUtils.isNotBlank(dto.getPassword()) && dto.getPassword().equals(dto.getConfirmPassword()) && validarPasswordRestrictions(dto.getPassword());
+        if (dto == null) {
+            return true;
+        }
+        
+        if (StringUtils.isBlank(dto.getPassword()) || StringUtils.isBlank(dto.getConfirmPassword())) {
+            return true;
+        }
+
+        boolean valid = true;
+        context.disableDefaultConstraintViolation();
+
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            context.buildConstraintViolationWithTemplate("Las contraseñas no coinciden")
+                .addPropertyNode("confirmPassword")
+                .addConstraintViolation();
+            valid = false;
+        }
+
+        if (!validarPasswordRestrictions(dto.getPassword())) {
+            context.buildConstraintViolationWithTemplate("La contraseña no cumple el formato requerido")
+                .addPropertyNode("password")
+                .addConstraintViolation();
+            valid = false;
+        }
+
+        return valid;
     }
 
     private boolean validarPasswordRestrictions(String password) {

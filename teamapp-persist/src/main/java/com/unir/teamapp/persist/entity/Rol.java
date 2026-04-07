@@ -3,9 +3,6 @@ package com.unir.teamapp.persist.entity;
 import java.io.Serial;
 import java.io.Serializable;
 
-import com.unir.teamapp.persist.annotation.UniqueEntity;
-import com.unir.teamapp.persist.util.FieldConstants;
-
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +27,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder(toBuilder = true)
-@UniqueEntity(fields = FieldConstants.CODIGO)
 public class Rol extends BaseEntity implements Serializable, BaseEntityId<Integer> {
 
     @Serial

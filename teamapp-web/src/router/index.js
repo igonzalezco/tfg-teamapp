@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { authStore } from '@/stores/auth';
-import { isTokenExpired } from '@/utils/token';
+import { authStore } from '@/stores/auth'
+import { isTokenExpired } from '@/utils/token'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,8 +8,8 @@ const router = createRouter({
     {
       path: '/',
       redirect: {
-        name: 'auth'
-      }
+        name: 'auth',
+      },
     },
     {
       path: '/auth',
@@ -21,36 +21,47 @@ const router = createRouter({
       name: 'content',
       component: () => import('@/views/ContentView.vue'),
       redirect: {
-        name: 'initContent'
+        name: 'initContent',
       },
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
       },
       children: [
         {
           path: '/content/initContent',
           name: 'initContent',
-          component: () => import('@/views/InitView.vue')
-        }
-      ]
-    }
+          component: () => import('@/views/InitView.vue'),
+        },
+        {
+          path: 'content/equipos/crear',
+          name: 'createTeam',
+          component: () => import('@/views/CreateTeamView.vue'),
+        },
+        {
+          path: 'content/equipos/:id/dashboard',
+          name: 'dashboard',
+          component: () => import('@/views/DashboardView.vue'),
+          props: true,
+        },
+      ],
+    },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  const auth = authStore();
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  const auth = authStore()
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (auth.isLoggedIn && !isTokenExpired()) {
-      next();
-      return;
+      next()
+      return
     }
-    auth.logout;
+    auth.logout
     next('/auth')
   } else {
-    if (from.path == "/" && to.path == "/auth" && auth.isLoggedIn && !isTokenExpired()) {
-      next('/content/initContent');
+    if (from.path == '/' && to.path == '/auth' && auth.isLoggedIn && !isTokenExpired()) {
+      next('/content/initContent')
     } else {
-      next();
+      next()
     }
   }
 })

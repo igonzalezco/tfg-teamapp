@@ -1,5 +1,6 @@
 package com.unir.teamapp.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +24,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
-
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -33,46 +33,44 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Loguea al usuario en el sistema", description= "Se solicita login y password para poder acceder al sistema.", responses = {
-        @ApiResponse(responseCode = "200", description = "Success"),
-        @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
-        @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
+    @Operation(summary = "Loguea al usuario en el sistema", description = "Se solicita login y password para poder acceder al sistema.", responses = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
+            @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
     })
-    public TokenUsuarioRolesDTO login(@RequestBody @Valid @NotNull LoginRequestDTO loginRequest, final HttpServletRequest request) {
+    public TokenUsuarioRolesDTO login(@RequestBody @Valid @NotNull LoginRequestDTO loginRequest,
+            final HttpServletRequest request) {
         TokenUsuarioRolesDTO salida = new TokenUsuarioRolesDTO();
         try {
             salida = authService.performLoginUsuario(loginRequest, request);
         } catch (final BadCredentialsException e) {
-            throw new CustomException(e);
+            throw new CustomException(e.getMessage(), e, HttpStatus.FORBIDDEN);
         } catch (final CustomLockedException e) {
-            throw new CustomException(e.getLocalizedMessage(), e.getErrorResponse());
+            throw new CustomException(e.getLocalizedMessage(), e.getErrorResponse(), HttpStatus.FORBIDDEN);
         } catch (final Exception e) {
             throw new CustomException(e);
         }
-        
+
         return salida;
     }
-    
+
     @PostMapping(value = "/registro", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Registra al usuario en el sistema", description= "Se solicita varios datos para poder registrar al usuario en el sistema.", responses = {
-        @ApiResponse(responseCode = "200", description = "Success"),
-        @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
-        @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
+    @Operation(summary = "Registra al usuario en el sistema", description = "Se solicita varios datos para poder registrar al usuario en el sistema.", responses = {
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
+            @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
     })
     public Boolean registro(@RequestBody @Valid @NotNull RegisterRequestDTO registerRequest) {
         Boolean salida = false;
         try {
-           salida = authService.register(registerRequest);
-        } catch (final BadCredentialsException e) {
-            throw new CustomException(e);
-        } catch (final CustomLockedException e) {
-            throw new CustomException(e.getLocalizedMessage(), e.getErrorResponse());
+            salida = authService.register(registerRequest);
+        } catch (final IllegalArgumentException e) {
+            throw new CustomException(e.getMessage(), e, HttpStatus.BAD_REQUEST);
         } catch (final Exception e) {
             throw new CustomException(e);
         }
-        
+
         return salida;
     }
-
 
 }

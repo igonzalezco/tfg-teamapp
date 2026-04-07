@@ -25,9 +25,7 @@ public class UsuarioEquipoDTO extends BaseDTO implements Serializable {
 
     private Integer id;
 
-    private UsuarioVistaDTO usuario;
-
-    private EquipoDTO equipo;
+    private EquipoVistaDTO equipo;
 
     private PermisoDTO permiso;
 

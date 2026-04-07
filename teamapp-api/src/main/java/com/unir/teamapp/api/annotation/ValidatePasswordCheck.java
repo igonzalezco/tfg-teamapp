@@ -15,7 +15,9 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidatePasswordCheck {
 
-    String menssage() default "La contraseña no son válidas";
+    String message() default "La contraseña no es válida";
+
+    Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 

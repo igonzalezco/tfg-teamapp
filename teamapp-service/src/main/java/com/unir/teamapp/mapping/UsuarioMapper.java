@@ -7,12 +7,10 @@ import org.mapstruct.Named;
 import com.unir.teamapp.api.dto.UsuarioVistaDTO;
 import com.unir.teamapp.persist.entity.Usuario;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { RolMapper.class, UsuarioEquipoMapper.class })
 public interface UsuarioMapper {
 
     @Named("asUserDTO")
-    @Mapping(target = "rol", ignore = true)
-    @Mapping(target = "usuarioEquipos", ignore = true)
-    UsuarioVistaDTO asUsuarioDTO(Usuario src);
+    UsuarioVistaDTO asUsuarioVistaDTO(Usuario src);
 
 }

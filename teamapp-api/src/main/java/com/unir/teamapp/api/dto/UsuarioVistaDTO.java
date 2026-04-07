@@ -24,10 +24,12 @@ public class UsuarioVistaDTO extends BaseDTO implements Serializable {
 
     private static final long serialVersionUID = 7673535787829804860L;
 
+    private Integer id;
+
     private String email;
 
     private RolDTO rol;
-    
+
     private List<UsuarioEquipoDTO> usuarioEquipos;
 
 }

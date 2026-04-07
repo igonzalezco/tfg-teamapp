@@ -1,56 +1,91 @@
 <template>
-  <el-form ref="loginFormRef" @submit.prevent="submitLogin" :model="usuario" :rules="rules" label-position="top">
-    <el-form-item :label="$t('login.email')" prop="email">
-      <el-input v-model="usuario.username" type="email" :placeholder="$t('login.placeholder.email')" />
+  <el-form
+    ref="loginFormRef"
+    @submit.prevent="submitLogin"
+    :model="usuario"
+    :rules="rules"
+    label-position="top"
+  >
+    <el-form-item :label="$t('login.email')" prop="username">
+      <el-input
+        v-model="usuario.username"
+        type="email"
+        :placeholder="$t('login.placeholder.email')"
+      />
     </el-form-item>
 
     <el-form-item :label="$t('login.password')" prop="password">
-      <el-input v-model="usuario.password" type="password" :placeholder="$t('login.placeholder.password')" show-password />
+      <el-input
+        v-model="usuario.password"
+        type="password"
+        :placeholder="$t('login.placeholder.password')"
+        show-password
+      />
     </el-form-item>
 
     <el-form-item>
-      <el-button :disabled="disableEntrar" type="primary" @click="submitLogin">{{ $t('login.login') }}</el-button>
+      <el-button :disabled="disableEntrar" type="primary" @click="submitLogin">{{
+        $t('login.login')
+      }}</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-import { authStore } from '@/stores/auth';
+  import { authStore } from '@/stores/auth'
 
-export default {
-  name: 'LoginForm',
+  export default {
+    name: 'LoginForm',
 
-  data() {
-    return {
-      usuario : {
-        username: '',
-        password: '',
+    data() {
+      return {
+        usuario: {
+          username: '',
+          password: '',
+        },
+        rules: {
+          username: [{ required: true, message: this.$t('login.rules.email'), trigger: 'blur' }],
+          password: [{ required: true, message: this.$t('login.rules.password'), trigger: 'blur' }],
+        },
+        disableEntrar: false,
+        auth: null,
+      }
+    },
+    created() {
+      this.auth = authStore()
+    },
+    methods: {
+      submitLogin() {
+        var self = this
+        this.$refs.loginFormRef.validate((valid) => {
+          if (valid) {
+            this.disableEntrar = true
+            this.auth
+              .login(this.usuario)
+              .then((response) => {
+                self.disableEntrar = false
+                self.$router.push('/content/initContent')
+              })
+              .catch((err) => {
+                const msg = err.response?.data?.details?.[0] || 'Se ha producido un error'
+
+                this.$notify({
+                  title: 'Error',
+                  text: msg,
+                  type: 'error',
+                })
+              })
+              .finally(() => {
+                this.limpiarForm()
+                self.disableEntrar = false
+              })
+          }
+        })
       },
-      rules: {
-        username: [{ required: true, message: this.$t('login.rules.email'), trigger: 'blur' }],
-        password: [{ required: true, message: this.$t('login.rules.password'), trigger: 'blur' }],
+      limpiarForm() {
+        this.usuario.username = ''
+        this.usuario.password = ''
       },
-      disableEntrar: false,
-      auth: null,
-    }
-  },
-  created() {
-    this.auth = authStore();
-  },
-  methods: {
-    submitLogin() {
-      var self = this;
-      this.$refs.loginFormRef.validate((valid) => {
-        if (valid) {
-            this.disableEntrar = true;
-            this.auth.login(this.usuario)
-            .then((response) => {
-              self.disableEntrar = false;
-              this.$router.push("/content/initContent");
-            })
-        }
-      });
-    }
+    },
   }
-}
 </script>

@@ -28,7 +28,4 @@ public class TokenUsuarioRolesDTO extends BaseDTO implements Serializable {
     private String token;
 
     private UsuarioVistaDTO usuario;
-
-    private EquipoVistaDTO equipos;
-
 }

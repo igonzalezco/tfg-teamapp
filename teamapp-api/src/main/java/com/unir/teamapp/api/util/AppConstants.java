@@ -13,7 +13,6 @@ public class AppConstants {
     public static final String URL_AUTH_LOGIN = AppConstants.URL_BASE_PATH + "/login";
     public static final String URL_AUTH_REGISTER = AppConstants.URL_BASE_PATH + "/registro";
 
-
     /** JWT token defaults **/
     public static final String TOKEN_HEADER = HttpHeaders.AUTHORIZATION;
     public static final String TOKEN_PREFIX = "Bearer";
@@ -24,10 +23,10 @@ public class AppConstants {
 
     /** Roles **/
     public static final String ROLE = "ROLE_";
-    public static final String ADMINISTRADOR = "Administrador";
-    public static final Integer DEFAULT_USER_ROLE_ID = 2;
+    public static final String ADMINISTRADOR = "ADMINISTRADOR";
+    public static final String USUARIO = "USUARIO";
 
-    /** Default Team **/
-    public static final Integer DEFAULT_TEAM_ID = 1;
+    /** Permisos **/
+    public static final String PERMISO_ADMINISTRADOR = "ADMINISTRADOR";
 
 }

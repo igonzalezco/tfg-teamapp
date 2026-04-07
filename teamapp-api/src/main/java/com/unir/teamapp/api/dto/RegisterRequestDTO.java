@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.unir.teamapp.api.annotation.ValidatePasswordCheck;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -38,7 +37,6 @@ public class RegisterRequestDTO implements Serializable {
     @ToString.Exclude
     @Size(min = 0, max = 255)
     private String password;
-
 
     @NotBlank
     @ToString.Exclude
