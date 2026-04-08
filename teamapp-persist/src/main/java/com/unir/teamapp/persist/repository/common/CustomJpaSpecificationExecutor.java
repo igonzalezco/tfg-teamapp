@@ -9,7 +9,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 import jakarta.persistence.EntityManager;
 
 @NoRepositoryBean
-public interface ComplexJpaSpecificationExecutor<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+public interface CustomJpaSpecificationExecutor<T, ID extends Serializable>
+        extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
 
     Class<T> getType();
 

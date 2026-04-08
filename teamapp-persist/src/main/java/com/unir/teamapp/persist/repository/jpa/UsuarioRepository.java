@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.unir.teamapp.persist.entity.Usuario;
-import com.unir.teamapp.persist.repository.common.ComplexJpaRepository;
+import com.unir.teamapp.persist.repository.common.CustomJpaRepository;
 
 @Repository("usuarioRepository")
-public interface UsuarioRepository extends ComplexJpaRepository<Usuario, Integer> {
+public interface UsuarioRepository extends CustomJpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByEmail(String email);
 

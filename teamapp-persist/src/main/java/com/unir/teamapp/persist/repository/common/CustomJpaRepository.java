@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface ComplexJpaRepository<T, ID extends Serializable> extends ComplexJpaSpecificationExecutor<T, ID> {
+public interface CustomJpaRepository<T, ID extends Serializable> extends CustomJpaSpecificationExecutor<T, ID> {
 
     Page<T> findAll(Specification<T> spec, Pageable pageable, EntityGraphType entityGraphType, String entityGraphName);
 

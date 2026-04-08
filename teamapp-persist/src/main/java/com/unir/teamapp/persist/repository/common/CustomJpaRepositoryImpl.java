@@ -17,13 +17,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 @NoRepositoryBean
-public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements ComplexJpaRepository<T, ID> {
+public class CustomJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID>
+        implements CustomJpaRepository<T, ID> {
 
     protected final JpaEntityInformation<T, ID> entityInformation;
     protected final EntityManager em;
     protected final PersistenceProvider provider;
 
-    public ComplexJpaRepositoryImpl(JpaEntityInformation<T, ID> entityInformation, EntityManager entityManager) {
+    public CustomJpaRepositoryImpl(JpaEntityInformation<T, ID> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
 
         this.entityInformation = entityInformation;
@@ -31,7 +32,7 @@ public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends Simple
         this.provider = PersistenceProvider.fromEntityManager(entityManager);
     }
 
-    /** 
+    /**
      * @return Class<T>
      */
     @Override
@@ -39,7 +40,7 @@ public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends Simple
         return entityInformation.getJavaType();
     }
 
-    /** 
+    /**
      * @return EntityManager
      */
     @Override
@@ -47,7 +48,7 @@ public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends Simple
         return em;
     }
 
-    /** 
+    /**
      * @param spec
      * @param pageable
      * @param entityGraphType
@@ -57,12 +58,12 @@ public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends Simple
     @Override
     public Page<T> findAll(Specification<T> spec, Pageable pageable, EntityGraphType entityGraphType,
             String entityGraphName) {
-        TypedQuery<T> query = super.getQuery(spec,pageable);
+        TypedQuery<T> query = super.getQuery(spec, pageable);
         query.setHint(entityGraphType.getKey(), em.getEntityGraph(entityGraphName));
         return super.readPage(query, getDomainClass(), pageable, spec);
     }
 
-    /** 
+    /**
      * @param spec
      * @param entityGraphType
      * @param entityGraphName
@@ -75,7 +76,7 @@ public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends Simple
         return query.getResultList();
     }
 
-    /** 
+    /**
      * @param spec
      * @param sort
      * @param entityGraphType
@@ -89,7 +90,7 @@ public class ComplexJpaRepositoryImpl<T, ID extends Serializable> extends Simple
         return query.getResultList();
     }
 
-    /** 
+    /**
      * @param spec
      * @param entityGraphType
      * @param entityGraphName
