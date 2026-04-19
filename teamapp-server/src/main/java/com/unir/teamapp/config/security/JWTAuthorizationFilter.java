@@ -27,43 +27,48 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JWTAuthorizationFilter extends OncePerRequestFilter{
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
     private final JwtUtil jwtUtil;
-    
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             final String header = request.getHeader(AppConstants.TOKEN_HEADER);
+
             if (header == null || !header.startsWith(AppConstants.TOKEN_PREFIX)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            String token = request.getHeader(AppConstants.TOKEN_HEADER);
+            final String token = header.substring(AppConstants.TOKEN_PREFIX.length()).trim();
             final String username = jwtUtil.getUsername(token);
+
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
                 if (jwtUtil.isTokenValid(token, userDetails)) {
                     final UsernamePasswordAuthenticationToken authentication = getAuthentication(token);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    filterChain.doFilter(request, response);
+                } else {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    return;
                 }
-            } else {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             }
-            
+
+            filterChain.doFilter(request, response);
+
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
     }
-    
-    /** 
+
+    /**
      * @param token
      * @return UsernamePasswordAuthenticationToken
      */
@@ -71,11 +76,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter{
         final Claims claims = jwtUtil.getAllClaimsFromToken(token);
         final String username = claims.getSubject();
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final Collection<SimpleGrantedAuthority> authorities = Optional.ofNullable((claims.get(AppConstants.TOKEN_AUTHORITIES)))
-                    .map(_ -> Arrays.stream(claims.get(AppConstants.TOKEN_AUTHORITIES).toString().split(","))
+        final Collection<SimpleGrantedAuthority> authorities = Optional
+                .ofNullable((claims.get(AppConstants.TOKEN_AUTHORITIES)))
+                .map(_ -> Arrays.stream(claims.get(AppConstants.TOKEN_AUTHORITIES).toString().split(","))
                         .map(SimpleGrantedAuthority::new).toList())
-                    .orElseGet(ArrayList::new);
-        
+                .orElseGet(ArrayList::new);
+
         return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
     }
 

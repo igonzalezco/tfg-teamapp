@@ -1,5 +1,7 @@
 package com.unir.teamapp.config.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -30,9 +32,8 @@ import com.unir.teamapp.service.util.JwtUtil;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    
-    
-    /** 
+
+    /**
      * @return JWTAuthorizationFilter
      */
     @Bean
@@ -40,8 +41,7 @@ public class SecurityConfig {
         return new JWTAuthorizationFilter(userDetailsService, jwtUtil);
     }
 
-    
-    /** 
+    /**
      * @return PasswordEncoder
      */
     @Bean
@@ -49,31 +49,32 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new CustomSHAPasswordEncoder();
     }
-   
-    /** 
+
+    /**
      * @param http
      * @param authManager
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
-    SecurityFilterChain securityFilterChain(final HttpSecurity http, AuthenticationManager authManager, final JWTAuthorizationFilter jwtAuthorizationFilter) throws Exception {
+    SecurityFilterChain securityFilterChain(final HttpSecurity http, AuthenticationManager authManager,
+            final JWTAuthorizationFilter jwtAuthorizationFilter) throws Exception {
         http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-            .requestMatchers(
-                AppConstants.URL_SWAGGER_API_DOCS,
-                AppConstants.URL_SWAGGER_UI,
-                AppConstants.URL_SWAGGER_UI_CUSTOM
-            ).permitAll()
-            .requestMatchers(HttpMethod.GET, AppConstants.URL_PUBLIC).permitAll()
-            .requestMatchers(HttpMethod.POST, AppConstants.URL_AUTH_LOGIN).permitAll()
-            .requestMatchers(HttpMethod.POST, AppConstants.URL_AUTH_REGISTER).permitAll()
-            .anyRequest().authenticated()
-        ).addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationManager(authManager)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable());
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                AppConstants.URL_SWAGGER_API_DOCS,
+                                AppConstants.URL_SWAGGER_UI,
+                                AppConstants.URL_SWAGGER_UI_CUSTOM)
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, AppConstants.URL_PUBLIC).permitAll()
+                        .requestMatchers(HttpMethod.POST, AppConstants.URL_AUTH_LOGIN).permitAll()
+                        .requestMatchers(HttpMethod.POST, AppConstants.URL_AUTH_REGISTER).permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationManager(authManager)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable());
 
         return http.build();
     }
@@ -83,24 +84,28 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    
-    /** 
+    /**
      * @return CorsConfigurationSource
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }
 
-   
-   /** 
-    * @param userDetailsService
-    * @return DaoAuthenticationProvider
-    */
-   @Bean
+    /**
+     * @param userDetailsService
+     * @return DaoAuthenticationProvider
+     */
+    @Bean
     DaoAuthenticationProvider getDaoAuthProvider(final UserDetailsService userDetailsService) {
         final DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
@@ -109,7 +114,7 @@ public class SecurityConfig {
         return provider;
     }
 
-    /** 
+    /**
      * @return PermissionEvaluator
      */
     @Bean
@@ -117,8 +122,7 @@ public class SecurityConfig {
         return new CustomPermissionEvaluator();
     }
 
-    
-    /** 
+    /**
      * @return MethodSecurityExpressionHandler
      */
     @Bean
