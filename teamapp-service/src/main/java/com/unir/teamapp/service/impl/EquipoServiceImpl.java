@@ -1,6 +1,7 @@
 package com.unir.teamapp.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,19 @@ public class EquipoServiceImpl implements EquipoService {
         .permiso(permisoAdministrador).build();
 
     return usuarioEquipoMapper.asUsuarioEquipoDTO(usuarioEquipoRepository.save(usuarioEquipo));
+  }
+
+  @Override
+  public void eliminarEquipo(Integer equipoId) {
+    Equipo equipo = equipoRepository.findById(equipoId).orElseThrow(() -> new CustomException(
+        "No se ha encontrado el equipo"));
+
+    List<UsuarioEquipo> relaciones = usuarioEquipoRepository.findByEquipoId(equipoId);
+
+    for (UsuarioEquipo relacion : relaciones) {
+      usuarioEquipoRepository.delete(relacion);
+    }
+
+    equipo.setDeletedAt(LocalDateTime.now());
   }
 }

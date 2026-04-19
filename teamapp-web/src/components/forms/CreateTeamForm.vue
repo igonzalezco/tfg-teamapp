@@ -114,19 +114,17 @@
       await formRef.value.validate()
       loading.value = true
 
-      const updatedUser = await auth.createTeamAction({
+      await auth.createTeamAction({
         nombre: form.name,
         descripcion: form.description,
       })
 
-      const createdTeam = updatedUser?.teams?.[updatedUser.teams.length - 1]
-
       ElMessage.success('Equipo creado correctamente')
 
-      if (createdTeam?.id) {
+      if (auth.getSelectedTeam) {
         router.push({
-          name: 'teamDashboard',
-          params: { id: createdTeam.id },
+          name: 'dashboard',
+          params: { id: auth.getSelectedTeam.equipo.id },
         })
         return
       }

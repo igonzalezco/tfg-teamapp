@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +38,15 @@ public class EquipoController {
       @Valid @RequestBody final EquipoVistaDTO equipoVistaDto) {
     return equipoService.crearEquipo(equipoVistaDto);
   }
+
+  @DeleteMapping(value = "/api/equipos/{equipoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Operation(summary = "Elimina un equipo", description = "Se solicita el id del equipo para poder eliminarlo.", responses = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
+      @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
+  })
+  public void deleteEquipo(@PathVariable final Integer equipoId) {
+    equipoService.eliminarEquipo(equipoId);
+  }
+
 }

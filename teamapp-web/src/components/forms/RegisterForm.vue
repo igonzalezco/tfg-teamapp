@@ -91,10 +91,10 @@
               .register(this.form)
               .then((response) => {
                 self.disableRegistrar = false
-                self.$router.push('/content/initContent')
+                self.$router.push({ name: 'initContent' })
               })
               .catch((err) => {
-                self.$router.push('/content/initContent')
+                self.$router.push({ name: 'initContent' })
               })
               .finally(() => {
                 self.disableRegistrar = false

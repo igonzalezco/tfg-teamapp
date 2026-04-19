@@ -13,6 +13,11 @@ class TeamService {
       headers: { 'Content-Type': 'application/json' },
     })
   }
+
+  deleteTeam(id) {
+    var _self = this
+    return request.delete(_self.baseUrl + 'api/equipos/' + id)
+  }
 }
 
 export default TeamService

@@ -28,17 +28,17 @@ const router = createRouter({
       },
       children: [
         {
-          path: '/content/initContent',
+          path: 'initContent',
           name: 'initContent',
           component: () => import('@/views/InitView.vue'),
         },
         {
-          path: 'content/equipos/crear',
+          path: 'equipos/crear',
           name: 'createTeam',
           component: () => import('@/views/CreateTeamView.vue'),
         },
         {
-          path: 'content/equipos/:id/dashboard',
+          path: 'equipos/:id/dashboard',
           name: 'dashboard',
           component: () => import('@/views/DashboardView.vue'),
           props: true,
@@ -50,20 +50,34 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = authStore()
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (auth.isLoggedIn && !isTokenExpired()) {
+  const authenticated = auth.isLoggedIn && !isTokenExpired()
+
+  if (!authenticated) {
+    auth.logout()
+
+    if (to.name === 'auth') {
       next()
-      return
-    }
-    auth.logout
-    next('/auth')
-  } else {
-    if (from.path == '/' && to.path == '/auth' && auth.isLoggedIn && !isTokenExpired()) {
-      next('/content/initContent')
     } else {
-      next()
+      next({ name: 'auth' })
     }
+    return
   }
+
+  if (to.path === '/auth' || (from.path === '/auth' && to.name !== 'dashboard')) {
+    if (auth.hasTeams) {
+      next({
+        name: 'dashboard',
+        params: {
+          id: auth.getSelectedTeam.equipo.id,
+        },
+      })
+    } else {
+      next({ name: 'initContent' })
+    }
+    return
+  }
+
+  next()
 })
 
 export default router

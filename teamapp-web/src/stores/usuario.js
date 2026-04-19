@@ -1,5 +1,6 @@
 const tokenKey = 'Token'
 const usuarioKey = 'Usuario'
+const selectedTeamKey = 'selectedTeam'
 
 export function getToken() {
   return localStorage.getItem(tokenKey)
@@ -23,4 +24,16 @@ export function setUsuario(usuario) {
 
 export function removeUsuario() {
   return localStorage.removeItem(usuarioKey)
+}
+
+export function getSelectedTeam() {
+  return localStorage.getItem(selectedTeamKey)
+}
+
+export function setSelectedTeam(selectedTeam) {
+  return localStorage.setItem(selectedTeamKey, selectedTeam)
+}
+
+export function removeSelectedTeam() {
+  return localStorage.removeItem(selectedTeamKey)
 }

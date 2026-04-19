@@ -14,4 +14,7 @@ public interface UsuarioEquipoRepository extends CustomJpaRepository<UsuarioEqui
   @Query("SELECT ue FROM UsuarioEquipo ue JOIN FETCH ue.equipo WHERE ue.usuario.id = :id")
   List<UsuarioEquipo> findByUsuarioId(Integer id);
 
+  @Query("SELECT ue FROM UsuarioEquipo ue WHERE ue.equipo.id = :id")
+  List<UsuarioEquipo> findByEquipoId(Integer id);
+
 }

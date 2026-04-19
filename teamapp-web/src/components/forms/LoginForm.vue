@@ -64,7 +64,7 @@
               .login(this.usuario)
               .then((response) => {
                 self.disableEntrar = false
-                self.$router.push('/content/initContent')
+                self.$router.push({ name: 'content' })
               })
               .catch((err) => {
                 const msg = err.response?.data?.details?.[0] || 'Se ha producido un error'

@@ -684,3 +684,50 @@
     margin-left: 0 !important;
   }
 }
+
+/* -------------------------------- */
+/* OwnTeamSelector                  */
+/* -------------------------------- */
+
+.sidebar-team-block {
+  padding: 0 var(--app-space-3) var(--app-space-3);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.sidebar-team-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-3);
+}
+
+.sidebar-team-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-2);
+  padding: var(--app-space-3);
+  border: 1px solid var(--app-border-soft);
+  border-radius: var(--app-radius-sm);
+  background:
+    linear-gradient(180deg, rgba(73, 142, 76, 0.03), transparent 60%),
+    rgba(15, 55, 61, 0.14);
+}
+
+.sidebar-team-card__label {
+  color: var(--app-text-3);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-team-card__name {
+  color: var(--app-text-1);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.sidebar-team-card__select {
+  width: 100%;
+}
