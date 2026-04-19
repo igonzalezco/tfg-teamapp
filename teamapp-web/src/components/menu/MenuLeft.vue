@@ -9,6 +9,10 @@
       </el-button>
     </div>
 
+    <div v-if="!collapsed" class="sidebar-team-block">
+      <OwnTeamSelect @team-changed="onTeamChanged" />
+    </div>
+
     <el-menu
       :default-active="activeMenu"
       :collapse="collapsed"
@@ -38,6 +42,7 @@
   import { computed } from 'vue'
   import { useRoute } from 'vue-router'
   import { Expand, Fold, House, DataBoard, User } from '@element-plus/icons-vue'
+  import OwnTeamSelect from '../contents/OwnTeamSelect.vue'
 
   defineProps({
     collapsed: {
@@ -51,4 +56,10 @@
   const route = useRoute()
 
   const activeMenu = computed(() => route.path)
+
+  function onTeamChanged(userTeam) {
+    // De momento no hace falta hacer nada aquí.
+    // Más adelante puedes usar esto para recargar dashboard,
+    // cambiar de ruta o reconstruir el menú dinámico.
+  }
 </script>
