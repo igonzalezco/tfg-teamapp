@@ -31,7 +31,7 @@
   import { useRoute } from 'vue-router'
   import CalendarComponent from '@/components/contents/CalendarComponent.vue'
   import EventListComponent from '@/components/contents/EventListComponent.vue'
-  import eventService from '@/services/eventService'
+  import services from '@/services/services'
 
   const props = defineProps({
     id: {
@@ -48,8 +48,10 @@
   const loadEvents = async () => {
     loading.value = true
 
+    const filters = {}
+
     try {
-      const response = await eventService.getTeamEvents(props.id)
+      const response = await services.eventService.getTeamEvents(props.id, filters)
       events.value = response.data
     } finally {
       loading.value = false

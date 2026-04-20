@@ -7,20 +7,11 @@ class EventService {
     this.baseUrl = baseUrl
   }
 
-  getTeamEvents(teamId) {
+  getTeamEvents(teamId, query) {
     var _self = this
-    return request.get(_self.baseUrl + `/equipos/${teamId}/events`)
-  }
-  createTeam(team) {
-    var _self = this
-    return request.post(_self.baseUrl + 'api/equipos', team, {
+    return request.get(_self.baseUrl + `api/equipos/${teamId}/eventos`, query, {
       headers: { 'Content-Type': 'application/json' },
     })
-  }
-
-  deleteTeam(id) {
-    var _self = this
-    return request.delete(_self.baseUrl + 'api/equipos/' + id)
   }
 }
 

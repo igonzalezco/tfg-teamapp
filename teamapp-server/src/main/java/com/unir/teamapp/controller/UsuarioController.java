@@ -1,5 +1,5 @@
 package com.unir.teamapp.controller;
 
-public class UserController {
+public class UsuarioController {
 
 }
