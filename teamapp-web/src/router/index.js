@@ -31,8 +31,10 @@ router.beforeEach((to, from, next) => {
           id: auth.getSelectedTeam.equipo.id,
         },
       })
-    } else {
+    } else if (to.name !== 'initContent') {
       next({ name: 'initContent' })
+    } else {
+      next()
     }
     return
   }
