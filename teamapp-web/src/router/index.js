@@ -1,51 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { authStore } from '@/stores/auth'
 import { isTokenExpired } from '@/utils/token'
+import routes from './routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      redirect: {
-        name: 'auth',
-      },
-    },
-    {
-      path: '/auth',
-      name: 'auth',
-      component: () => import('@/views/AuthView.vue'),
-    },
-    {
-      path: '/content',
-      name: 'content',
-      component: () => import('@/views/ContentView.vue'),
-      redirect: {
-        name: 'initContent',
-      },
-      meta: {
-        requiresAuth: true,
-      },
-      children: [
-        {
-          path: 'initContent',
-          name: 'initContent',
-          component: () => import('@/views/InitView.vue'),
-        },
-        {
-          path: 'equipos/crear',
-          name: 'createTeam',
-          component: () => import('@/views/CreateTeamView.vue'),
-        },
-        {
-          path: 'equipos/:id/dashboard',
-          name: 'dashboard',
-          component: () => import('@/views/DashboardView.vue'),
-          props: true,
-        },
-      ],
-    },
-  ],
+  routes: routes,
 })
 
 router.beforeEach((to, from, next) => {

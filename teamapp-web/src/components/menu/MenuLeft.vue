@@ -3,8 +3,7 @@
     <div class="sidebar-top">
       <el-button text @click="$emit('toggle-collapse')">
         <el-icon size="20">
-          <Expand v-if="collapsed" />
-          <Fold v-else />
+          <component :is="collapsed ? ElementPlusIconsVue.Expand : ElementPlusIconsVue.Fold" />
         </el-icon>
       </el-button>
     </div>
@@ -20,19 +19,16 @@
       router
       class="sidebar-menu"
     >
-      <el-menu-item index="/content/initContent">
-        <el-icon><House /></el-icon>
-        <template #title>Inicio</template>
-      </el-menu-item>
-
-      <el-menu-item index="/content/dashboard">
-        <el-icon><DataBoard /></el-icon>
-        <template #title>Dashboard</template>
-      </el-menu-item>
-
-      <el-menu-item index="/profile">
-        <el-icon><User /></el-icon>
-        <template #title>Mi perfil</template>
+      <el-menu-item
+        v-for="item in menuItems"
+        :key="item.name"
+        :index="item.index"
+        :disabled="item.disabled"
+      >
+        <el-icon>
+          <component :is="item.icon" />
+        </el-icon>
+        <template #title>{{ $t(item.label) }}</template>
       </el-menu-item>
     </el-menu>
   </div>
@@ -41,8 +37,11 @@
 <script setup>
   import { computed } from 'vue'
   import { useRoute } from 'vue-router'
-  import { Expand, Fold, House, DataBoard, User } from '@element-plus/icons-vue'
+  import * as ElementPlusIconsVue from '@element-plus/icons-vue'
   import OwnTeamSelect from '../contents/OwnTeamSelect.vue'
+  import { authStore } from '@/stores/auth'
+  import routes from '@/router/routes'
+  import { useI18n } from 'vue-i18n'
 
   defineProps({
     collapsed: {
@@ -53,9 +52,63 @@
 
   defineEmits(['toggle-collapse'])
 
+  const auth = authStore()
+  const { t } = useI18n()
   const route = useRoute()
 
-  const activeMenu = computed(() => route.path)
+  function joinPaths(parentPath, childPath) {
+    if (!parentPath) {
+      return childPath || ''
+    }
+
+    if (!childPath) {
+      return parentPath
+    }
+
+    if (childPath.startsWith('/')) {
+      return childPath
+    }
+
+    const normalizedParent = parentPath.endsWith('/') ? parentPath.slice(0, -1) : parentPath
+
+    return `${normalizedParent}/${childPath}`
+  }
+
+  function buildFlatMenuItems(routeList, parentPath = '', teamId = null) {
+    return routeList.flatMap((route) => {
+      const fullPath = joinPaths(parentPath, route.path)
+      const needsTeam = fullPath.includes(':id')
+
+      let index = fullPath
+
+      if (needsTeam && teamId) {
+        index = index.replace(':id', String(teamId))
+      }
+
+      const currentItem =
+        route.visible === true
+          ? [
+              {
+                path: route.path,
+                name: t(route.name) || route.name,
+                label: route.label,
+                icon: ElementPlusIconsVue[route.icon] || ElementPlusIconsVue.Menu,
+                index,
+                disabled: needsTeam && !teamId,
+              },
+            ]
+          : []
+
+      const childrenItems = buildFlatMenuItems(route.children || [], fullPath, teamId)
+
+      return [...currentItem, ...childrenItems]
+    })
+  }
+
+  const menuItems = computed(() => {
+    const teamId = auth.getTeamId
+    return buildFlatMenuItems(routes, '', teamId)
+  })
 
   function onTeamChanged(userTeam) {
     // De momento no hace falta hacer nada aquí.

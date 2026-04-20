@@ -24,6 +24,7 @@ export const authStore = defineStore('auth', {
     hasTeams: (state) => !!state.usuario?.usuarioEquipos?.length,
     getUserTeams: (state) => state.usuario?.usuarioEquipos || [],
     getSelectedTeam: (state) => state.selectedTeam,
+    getTeamId: (state) => state.selectedTeam?.equipo?.id || null,
   },
   actions: {
     async login(usuario) {
