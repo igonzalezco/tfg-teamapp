@@ -24,20 +24,27 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class EventoDTO extends AuditableDTO implements Serializable { 
+public class EventoDTO extends AuditableDTO implements Serializable {
 
     private static final long serialVersionUID = 7669856425729874860L;
 
     private Integer id;
 
     private String titulo;
-   
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime fechaEvento;
+    private LocalDateTime fechaInicio;
 
-    private EquipoDTO equipo;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime fechaFin;
+
+    private Boolean allDay;
+
+    private String ubicación;
 
     private List<ConvocatoriaDTO> convocatorias;
 
