@@ -21,7 +21,7 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class EquipoDTO extends AuditableDTO implements Serializable { 
+public class EquipoDTO extends BaseDTO implements Serializable {
 
     private static final long serialVersionUID = 7669856982578510860L;
 
@@ -33,13 +33,13 @@ public class EquipoDTO extends AuditableDTO implements Serializable {
 
     private List<JugadorDTO> jugadores;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "equipo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipo", fetch = FetchType.LAZY)
     private List<CuotaDTO> cuotas;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "equipo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipo", fetch = FetchType.LAZY)
     private List<NoticiaDTO> noticias;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "equipo", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipo", fetch = FetchType.LAZY)
     private List<EncuestaDTO> encuestas;
 
 }

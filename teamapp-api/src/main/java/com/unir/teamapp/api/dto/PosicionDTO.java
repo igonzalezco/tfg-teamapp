@@ -17,7 +17,7 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class PosicionDTO extends AuditableDTO implements Serializable { 
+public class PosicionDTO extends BaseDTO implements Serializable {
 
     private static final long serialVersionUID = 7669128442523510860L;
 

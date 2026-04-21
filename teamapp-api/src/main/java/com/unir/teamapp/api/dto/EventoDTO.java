@@ -25,7 +25,7 @@ import lombok.ToString;
 @JsonInclude(Include.NON_NULL)
 @ToString(callSuper = true)
 @AllArgsConstructor
-public class EventoDTO extends AuditableDTO implements Serializable {
+public class EventoDTO extends BaseDTO implements Serializable {
 
     private static final long serialVersionUID = 7669856425729874860L;
 
@@ -48,7 +48,7 @@ public class EventoDTO extends AuditableDTO implements Serializable {
 
     private Boolean allDay;
 
-    private String ubicación;
+    private String ubicacion;
 
     private List<ConvocatoriaDTO> convocatorias;
 
