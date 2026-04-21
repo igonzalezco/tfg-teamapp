@@ -12,12 +12,12 @@ La aplicación proporciona funcionalidad para que equipos deportivos amateurs pu
 La estructura del repositorio es la siguiente:
 
 /
-├── teamapp-db/         # Carpeta que contiene los scripts de base de datos
-├── teamapp-persist/    # Paquete de persistencia de datos (Spring Boot)
-├── teamapp-server/     # Paquete principal del backend que contiene el server (Spring Boot)
-├── teamapp-service/    # Paquete de implementación de lógica de negocio
-├── teamapp-web/        # Paquete que contiene la aplicación cliente/frontal (Vue 3)
-└── README.md           # Este archivo
+├── teamapp-db/ # Carpeta que contiene los scripts de base de datos
+├── teamapp-persist/ # Paquete de persistencia de datos (Spring Boot)
+├── teamapp-server/ # Paquete principal del backend que contiene el server (Spring Boot)
+├── teamapp-service/ # Paquete de implementación de lógica de negocio
+├── teamapp-web/ # Paquete que contiene la aplicación cliente/frontal (Vue 3)
+└── README.md # Este archivo
 
 ## Requisitos previos
 
@@ -40,7 +40,6 @@ Para levantar el server de backend con maven:
 1. Desde la raiz del proyecto ejecutar
    ./mvnw spring-boot:run
 
-
 ### Frontend
 
 1. Entrar en la carpeta del frontend:
@@ -50,10 +49,9 @@ Para levantar el server de backend con maven:
    npm install
 
 3. Iniciar el servidor de desarrollo:
-   npm run dev
+   npm run local
 
 La aplicación estará disponible en http://localhost:5173 (por defecto).
-
 
 ## Configuración
 
