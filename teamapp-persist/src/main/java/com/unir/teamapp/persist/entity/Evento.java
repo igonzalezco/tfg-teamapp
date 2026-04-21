@@ -15,6 +15,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -34,6 +37,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder(toBuilder = true)
+@NamedEntityGraph(name = "obtenerEventos")
+// , attributeNodes = {
+// @NamedAttributeNode(value = "usuarioEquipos", subgraph = "sub.usuarioEquipo")
+// }, subgraphs = {
+// @NamedSubgraph(name = "sub.usuarioEquipo", attributeNodes = {
+// @NamedAttributeNode(value = "equipo"),
+// @NamedAttributeNode(value = "permiso") }) })
 public class Evento extends AuditableEntity implements Serializable, BaseEntityId<Integer> {
 
     @Serial
@@ -50,17 +60,26 @@ public class Evento extends AuditableEntity implements Serializable, BaseEntityI
     @Column(name = "titulo")
     private String titulo;
 
-    @Column(name = "fecha_evento", nullable = false)
-    private LocalDateTime fechaEvento;
+    @Column(name = "fecha_inicio", nullable = false)
+    private LocalDateTime fechaInicio;
+
+    @Column(name = "fecha_fin", nullable = false)
+    private LocalDateTime fechaFin;
+
+    @Column(name = "all_day")
+    private Boolean allDay;
+
+    @Column(name = "ubicacion")
+    private String ubicacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "equipo_id", referencedColumnName = "id", nullable = false)
     private Equipo equipo;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "evento", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "evento", fetch = FetchType.LAZY)
     private List<Convocatoria> convocatorias;
 
-    @OneToMany(cascade= CascadeType.ALL, mappedBy = "evento", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "evento", fetch = FetchType.LAZY)
     private List<Necesidad> necesidades;
 
 }

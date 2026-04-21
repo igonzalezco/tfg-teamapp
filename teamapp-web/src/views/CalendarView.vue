@@ -48,11 +48,21 @@
   const loadEvents = async () => {
     loading.value = true
 
-    const filters = {}
+    const queryEventos = {
+      page: 0,
+      limit: 15,
+      ordenaciones: [],
+      filtros: [],
+      identificador: null,
+      identificadores: [],
+    }
+    const totalEventos = 0
+    const totalPaginasEventos = 0
 
+    let response = null
     try {
-      const response = await services.eventService.getTeamEvents(props.id, filters)
-      events.value = response.data
+      response = await services.eventService.getTeamEvents(props.id, queryEventos)
+      events.value = response.data.content
     } finally {
       loading.value = false
     }

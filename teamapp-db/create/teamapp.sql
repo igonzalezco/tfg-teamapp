@@ -35,7 +35,7 @@ CREATE TABLE comentario (
   texto VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- CONVOCATORIA
@@ -47,7 +47,7 @@ CREATE TABLE convocatoria (
   asiste BOOL NOT NULL DEFAULT false,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- CUOTA
@@ -60,7 +60,7 @@ CREATE TABLE cuota (
   fecha_fin TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- CUOTA JUGADOR
@@ -83,7 +83,7 @@ CREATE TABLE encuesta (
   equipo_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- EQUIPO
@@ -94,7 +94,7 @@ CREATE TABLE equipo (
   descripcion VARCHAR(255),
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- EVENTO
@@ -102,11 +102,14 @@ CREATE TABLE equipo (
 CREATE TABLE evento (
   id INT NOT NULL DEFAULT nextval('sq_evento_id'),
   titulo VARCHAR(100) NOT NULL,
-  fecha_evento TIMESTAMP,
+  fecha_inicio TIMESTAMP,
+  fecha_fin TIMESTAMP,
+  all_day BOOL DEFAULT false,
+  ubicacion varchar(255),
   equipo_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- JUGADOR
@@ -120,7 +123,7 @@ CREATE TABLE jugador (
   usuario_id INT,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- NECESIDAD
@@ -132,7 +135,7 @@ CREATE TABLE necesidad (
   usuario_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- NOTICIA
@@ -144,7 +147,7 @@ CREATE TABLE noticia (
   equipo_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- OPCION
@@ -154,7 +157,7 @@ CREATE TABLE opcion (
   encuesta_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- PERMISO
@@ -174,7 +177,7 @@ CREATE TABLE posicion (
   descripcion VARCHAR(100),
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- RESPUESTA
@@ -186,7 +189,7 @@ CREATE TABLE respuesta (
   opcion_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- ROL
@@ -206,7 +209,7 @@ CREATE TABLE usuario (
   rol_id INT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT (now()),
   modified_at TIMESTAMP,
-  delete_at TIMESTAMP
+  deleted_at TIMESTAMP
 );
 
 -- USUARIO EQUIPO
@@ -229,7 +232,7 @@ COMMENT ON COLUMN comentario.usuario_id IS 'Usuario del comentario';
 COMMENT ON COLUMN comentario.texto IS 'Texto del comentario';
 COMMENT ON COLUMN comentario.created_at IS 'Fecha y hora de alta del comentario';
 COMMENT ON COLUMN comentario.modified_at IS 'Fecha y hora de modificación del comentario';
-COMMENT ON COLUMN comentario.delete_at IS 'Fecha y hora de baja del comentario';
+COMMENT ON COLUMN comentario.deleted_at IS 'Fecha y hora de baja del comentario';
 
 COMMENT ON TABLE convocatoria IS 'Tabla de convocatorias';
 COMMENT ON COLUMN convocatoria.id IS 'Id de la convocatoria';
@@ -237,7 +240,7 @@ COMMENT ON COLUMN convocatoria.evento_id IS 'Evento de la convocatoria';
 COMMENT ON COLUMN convocatoria.jugador_id IS 'Jugador de la convocatoria';
 COMMENT ON COLUMN convocatoria.created_at IS 'Fecha y hora de alta de la convocatoria';
 COMMENT ON COLUMN convocatoria.modified_at IS 'Fecha y hora de modificación de la convocatoria';
-COMMENT ON COLUMN convocatoria.delete_at IS 'Fecha y hora de baja de la convocatoria';
+COMMENT ON COLUMN convocatoria.deleted_at IS 'Fecha y hora de baja de la convocatoria';
 
 COMMENT ON TABLE cuota IS 'Tabla de cuotas';
 COMMENT ON COLUMN cuota.id IS 'Id de la cuota';
@@ -247,7 +250,7 @@ COMMENT ON COLUMN cuota.equipo_id IS 'Equipo de la cuota';
 COMMENT ON COLUMN cuota.fecha_fin IS 'Fecha y hora de fin de la cuota';
 COMMENT ON COLUMN cuota.created_at IS 'Fecha y hora de alta de la cuota';
 COMMENT ON COLUMN cuota.modified_at IS 'Fecha y hora de modificación de la cuota';
-COMMENT ON COLUMN cuota.delete_at IS 'Fecha y hora de baja de la cuota';
+COMMENT ON COLUMN cuota.deleted_at IS 'Fecha y hora de baja de la cuota';
 
 COMMENT ON TABLE cuota_jugador IS 'Tabla de la relación entre cuotas y jugadores';
 COMMENT ON COLUMN cuota_jugador.id IS 'Id de la relación';
@@ -264,7 +267,7 @@ COMMENT ON COLUMN encuesta.multiple IS 'Indica si es de respuesa multiple la enc
 COMMENT ON COLUMN encuesta.equipo_id IS 'Equipo de la encuesta';
 COMMENT ON COLUMN encuesta.created_at IS 'Fecha y hora de alta de la encuesta';
 COMMENT ON COLUMN encuesta.modified_at IS 'Fecha y hora de modificación de la encuesta';
-COMMENT ON COLUMN encuesta.delete_at IS 'Fecha y hora de baja de la encuesta';
+COMMENT ON COLUMN encuesta.deleted_at IS 'Fecha y hora de baja de la encuesta';
 
 COMMENT ON TABLE equipo IS 'Tabla de equipos';
 COMMENT ON COLUMN equipo.id IS 'Id del equipo';
@@ -272,15 +275,18 @@ COMMENT ON COLUMN equipo.nombre IS 'Nombre del equipo';
 COMMENT ON COLUMN equipo.descripcion IS 'Descripción del equipo';
 COMMENT ON COLUMN equipo.created_at IS 'Fecha y hora de alta del equipo';
 COMMENT ON COLUMN equipo.modified_at IS 'Fecha y hora de modificación del equipo';
-COMMENT ON COLUMN equipo.delete_at IS 'Fecha y hora de baja del equipo';
+COMMENT ON COLUMN equipo.deleted_at IS 'Fecha y hora de baja del equipo';
 
 COMMENT ON TABLE evento IS 'Tabla de eventos';
 COMMENT ON COLUMN evento.id IS 'Id del evento';
 COMMENT ON COLUMN evento.titulo IS 'Nombre del evento';
-COMMENT ON COLUMN evento.fecha_evento IS 'Fecha y hora del evento';
+COMMENT ON COLUMN evento.fecha_inicio IS 'Fecha y hora de inicio del evento';
+COMMENT ON COLUMN evento.fecha_fin IS 'Fecha y hora de fin del evento';
+COMMENT ON COLUMN evento.all_day IS 'Indica si es evento de todo el día';
+COMMENT ON COLUMN evento.ubicacion IS 'Ubicación del evento';
 COMMENT ON COLUMN evento.created_at IS 'Fecha y hora de alta del evento';
 COMMENT ON COLUMN evento.modified_at IS 'Fecha y hora de modificación del evento';
-COMMENT ON COLUMN evento.delete_at IS 'Fecha y hora de baja del evento';
+COMMENT ON COLUMN evento.deleted_at IS 'Fecha y hora de baja del evento';
 
 COMMENT ON TABLE jugador IS 'Tabla de jugadores';
 COMMENT ON COLUMN jugador.id IS 'Id del jugador';
@@ -291,7 +297,7 @@ COMMENT ON COLUMN jugador.equipo_id IS 'Equipo del jugador';
 COMMENT ON COLUMN jugador.usuario_id IS 'Usuario del jugador';
 COMMENT ON COLUMN jugador.created_at IS 'Fecha y hora de alta del jugador';
 COMMENT ON COLUMN jugador.modified_at IS 'Fecha y hora de modificación del jugador';
-COMMENT ON COLUMN jugador.delete_at IS 'Fecha y hora de baja del jugador';
+COMMENT ON COLUMN jugador.deleted_at IS 'Fecha y hora de baja del jugador';
 
 COMMENT ON TABLE necesidad IS 'Tabla de necesidades';
 COMMENT ON COLUMN necesidad.id IS 'Id de la necesidad';
@@ -300,7 +306,7 @@ COMMENT ON COLUMN necesidad.evento_id IS 'Evento que tiene la necesidad';
 COMMENT ON COLUMN necesidad.usuario_id IS 'Usuario que se encarga de la necesidad';
 COMMENT ON COLUMN necesidad.created_at IS 'Fecha y hora de alta de la necesidad';
 COMMENT ON COLUMN necesidad.modified_at IS 'Fecha y hora de modificación de la necesidad';
-COMMENT ON COLUMN necesidad.delete_at IS 'Fecha y hora de baja de la necesidad';
+COMMENT ON COLUMN necesidad.deleted_at IS 'Fecha y hora de baja de la necesidad';
 
 COMMENT ON TABLE noticia IS 'Tabla de noticias';
 COMMENT ON COLUMN noticia.id IS 'Id de la noticia';
@@ -309,14 +315,14 @@ COMMENT ON COLUMN noticia.contenido IS 'Contenido de la noticia';
 COMMENT ON COLUMN noticia.equipo_id IS 'Equipo de la noticia';
 COMMENT ON COLUMN noticia.created_at IS 'Fecha y hora de alta de la noticia';
 COMMENT ON COLUMN noticia.modified_at IS 'Fecha y hora de modificación de la noticia';
-COMMENT ON COLUMN noticia.delete_at IS 'Fecha y hora de baja de la noticia';
+COMMENT ON COLUMN noticia.deleted_at IS 'Fecha y hora de baja de la noticia';
 
 COMMENT ON TABLE opcion IS 'Tabla de opciones';
 COMMENT ON COLUMN opcion.id IS 'Id de la opción';
 COMMENT ON COLUMN opcion.encuesta_id IS 'Encuesta de la opción';
 COMMENT ON COLUMN opcion.created_at IS 'Fecha y hora de alta de la opción';
 COMMENT ON COLUMN opcion.modified_at IS 'Fecha y hora de modificación de la opción';
-COMMENT ON COLUMN opcion.delete_at IS 'Fecha y hora de baja de la opción';
+COMMENT ON COLUMN opcion.deleted_at IS 'Fecha y hora de baja de la opción';
 
 COMMENT ON TABLE permiso IS 'Tabla de permisos';
 COMMENT ON COLUMN permiso.id IS 'Id del permiso';
@@ -330,7 +336,7 @@ COMMENT ON COLUMN posicion.codigo IS 'Código de la posicion';
 COMMENT ON COLUMN posicion.descripcion IS 'Descripción de la posicion';
 COMMENT ON COLUMN posicion.created_at IS 'Fecha y hora de alta de la posicion';
 COMMENT ON COLUMN posicion.modified_at IS 'Fecha y hora de modificación de la posicion';
-COMMENT ON COLUMN posicion.delete_at IS 'Fecha y hora de baja de la posicion';
+COMMENT ON COLUMN posicion.deleted_at IS 'Fecha y hora de baja de la posicion';
 
 COMMENT ON TABLE respuesta IS 'Tabla de respuestas';
 COMMENT ON COLUMN respuesta.id IS 'Id de la respuesta';
@@ -339,7 +345,7 @@ COMMENT ON COLUMN respuesta.usuario_id IS 'Jugador de la respuesta';
 COMMENT ON COLUMN respuesta.opcion_id IS 'Opción de la respuesta';
 COMMENT ON COLUMN respuesta.created_at IS 'Fecha y hora de alta de la respuesta';
 COMMENT ON COLUMN respuesta.modified_at IS 'Fecha y hora de modificación de la respuesta';
-COMMENT ON COLUMN respuesta.delete_at IS 'Fecha y hora de baja de la respuesta';
+COMMENT ON COLUMN respuesta.deleted_at IS 'Fecha y hora de baja de la respuesta';
 
 COMMENT ON TABLE rol IS 'Tabla de roles';
 COMMENT ON COLUMN rol.id IS 'Id del rol';
@@ -353,7 +359,7 @@ COMMENT ON COLUMN usuario.password IS 'Contraseña del usuario';
 COMMENT ON COLUMN usuario.rol_id IS 'Rol asociado al usuario';
 COMMENT ON COLUMN usuario.created_at IS 'Fecha y hora de alta del usuario';
 COMMENT ON COLUMN usuario.modified_at IS 'Fecha y hora de modificación del usuario';
-COMMENT ON COLUMN usuario.delete_at IS 'Fecha y hora de baja del usuario';
+COMMENT ON COLUMN usuario.deleted_at IS 'Fecha y hora de baja del usuario';
 
 COMMENT ON TABLE usuario_equipo IS 'Tabla intermedia de usuario equipo y permisos';
 COMMENT ON COLUMN usuario_equipo.id IS 'Id de la relación';
@@ -361,7 +367,7 @@ COMMENT ON COLUMN usuario_equipo.usuario_id IS 'usuario de la relación';
 COMMENT ON COLUMN usuario_equipo.equipo_id IS 'Equipo de la relación';
 COMMENT ON COLUMN usuario_equipo.permiso_id IS 'Permiso de la relación';
 
--- 
+--
 -- PROPIETARIOS SECUENCIAS
 --
 

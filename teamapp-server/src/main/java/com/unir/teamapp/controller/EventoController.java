@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,14 +39,14 @@ public class EventoController {
     return eventoService.crearEvento(eventoDto);
   }
 
-  @GetMapping(value = "/api/equipos/{equipoId}/eventos", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/equipos/{equipoId}/eventos/search", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Obtiene los eventos de un equipo", description = "Se obtienen todos los eventos que coinciden con los filtros que se envían", responses = {
       @ApiResponse(responseCode = "200", description = "Success"),
       @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
       @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
   })
-  public Page<EventoDTO> deleteEquipo(@PathVariable final Integer equipoId, @RequestBody final FiltersDTO filtros) {
-    return eventoService.obtenerEventos(filtros);
+  public Page<EventoDTO> buscarEventos(@PathVariable final Integer equipoId, @RequestBody final FiltersDTO filtros) {
+    return eventoService.obtenerEventos(equipoId, filtros);
   }
 
   @DeleteMapping(value = "/api/equipos/{equipoId}/eventos/{eventoId}")
@@ -56,7 +55,7 @@ public class EventoController {
       @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
       @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
   })
-  public void deleteEquipo(@PathVariable final Integer equipoId, @PathVariable final Integer eventoId) {
+  public void deleteEvento(@PathVariable final Integer equipoId, @PathVariable final Integer eventoId) {
     eventoService.eliminarEvento(equipoId, eventoId);
   }
 

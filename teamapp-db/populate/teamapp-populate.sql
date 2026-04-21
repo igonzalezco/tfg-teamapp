@@ -37,8 +37,8 @@ INSERT INTO posicion (codigo, descripcion) VALUES
 ('CT', 'Central');
 
 INSERT INTO usuario (email, password, rol_id)
-SELECT 'admin@teamapp.com', 'zYALHvVQj5KZ769G0UbB5W6mNlo=', r.id 
-FROM rol r 
+SELECT 'admin@teamapp.com', 'LKU+gRaAHL13Vgn6Vp2kfNTABhA=', r.id
+FROM rol r
 WHERE r.codigo = 'ADMINISTRADOR';
 
 END;

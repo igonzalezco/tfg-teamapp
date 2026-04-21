@@ -9,7 +9,7 @@ public interface EventoService {
 
   EventoDTO crearEvento(EventoDTO evento);
 
-  Page<EventoDTO> obtenerEventos(FiltersDTO filtros);
+  Page<EventoDTO> obtenerEventos(Integer equipoId, FiltersDTO filtros);
 
   void eliminarEvento(Integer equiopIdId, Integer eventoId);
 }

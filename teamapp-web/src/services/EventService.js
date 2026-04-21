@@ -9,7 +9,7 @@ class EventService {
 
   getTeamEvents(teamId, query) {
     var _self = this
-    return request.get(_self.baseUrl + `api/equipos/${teamId}/eventos`, query, {
+    return request.post(`${_self.baseUrl}api/equipos/${teamId}/eventos/search`, query, {
       headers: { 'Content-Type': 'application/json' },
     })
   }
