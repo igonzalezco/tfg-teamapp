@@ -8,4 +8,6 @@ public interface EquipoService {
   UsuarioEquipoDTO crearEquipo(EquipoVistaDTO equipo);
 
   void eliminarEquipo(Integer equipo);
+
+  void checkGestionEquipoForSessionUser(Integer equipoId);
 }

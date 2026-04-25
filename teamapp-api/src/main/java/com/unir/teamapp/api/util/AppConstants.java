@@ -28,5 +28,7 @@ public class AppConstants {
 
     /** Permisos **/
     public static final String PERMISO_ADMINISTRADOR = "ADMINISTRADOR";
+    public static final String PERMISO_STAFF = "STAFF";
+    public static final String PERMISO_JUGADOR = "JUGADOR";
 
 }

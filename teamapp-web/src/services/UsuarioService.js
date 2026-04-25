@@ -9,16 +9,12 @@ class UsuarioService {
 
   login(usuario) {
     var _self = this
-    return request.post(_self.baseUrl + 'login', usuario, {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return request.post(_self.baseUrl + 'login', usuario)
   }
 
   register(usuario) {
     var _self = this
-    return request.post(_self.baseUrl + 'registro', usuario, {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return request.post(_self.baseUrl + 'registro', usuario)
   }
 }
 

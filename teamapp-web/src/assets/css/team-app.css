@@ -731,3 +731,233 @@
 .sidebar-team-card__select {
   width: 100%;
 }
+
+/* -------------------------------- */
+/* Events                           */
+/* -------------------------------- */
+
+.event-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 100%;
+}
+
+.event-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.event-page__section {
+  padding: 1rem;
+}
+
+.event-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-filters__header,
+.event-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.event-filters__title,
+.event-list__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.event-filters__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-filters__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.event-filters__field,
+.event-filters__control {
+  width: 100%;
+}
+
+.event-filters__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-list__state,
+.event-calendar__state {
+  color: var(--app-text-muted);
+}
+
+.event-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.event-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--app-border-color);
+  border-radius: var(--app-radius-md);
+  background: var(--app-bg-soft);
+}
+
+.event-list__item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-list__item-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.event-list__item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--app-text-muted);
+}
+
+.event-list__item-description {
+  margin: 0;
+  color: var(--app-text-color);
+}
+
+.event-list__pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+.event-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-page__header,
+.event-create-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.event-page__header-actions,
+.event-create-page__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.event-create-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 100%;
+}
+
+.event-create-page__section {
+  padding: 1rem;
+}
+
+.event-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-create-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.event-create-form__control {
+  width: 100%;
+}
+
+.event-create-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+/* -------------------------------- */
+/* Full Calendar                    */
+/* -------------------------------- */
+
+.fc {
+  --fc-border-color: var(--app-border-color);
+  --fc-page-bg-color: var(--app-bg);
+  --fc-neutral-bg-color: var(--app-bg-soft);
+  --fc-list-event-hover-bg-color: var(--app-bg-mute);
+  --fc-today-bg-color: rgba(73, 142, 76, 0.12);
+  --fc-event-bg-color: #498e4c;
+  --fc-event-border-color: #498e4c;
+  --fc-event-text-color: #ffffff;
+  --fc-button-bg-color: #498e4c;
+  --fc-button-border-color: #498e4c;
+  --fc-button-hover-bg-color: #3f7c42;
+  --fc-button-hover-border-color: #3f7c42;
+  --fc-button-active-bg-color: #356837;
+  --fc-button-active-border-color: #356837;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number,
+.fc .fc-timegrid-slot-label-cushion,
+.fc .fc-timegrid-axis-cushion {
+  color: var(--app-text-color);
+}
+
+.fc .fc-scrollgrid,
+.fc .fc-theme-standard td,
+.fc .fc-theme-standard th {
+  border-color: var(--app-border-color);
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background: rgba(73, 142, 76, 0.12);
+}
+
+.fc .fc-event {
+  border-radius: 6px;
+  font-size: 0.85rem;
+}

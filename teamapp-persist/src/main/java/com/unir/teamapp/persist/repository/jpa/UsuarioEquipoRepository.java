@@ -1,12 +1,13 @@
 package com.unir.teamapp.persist.repository.jpa;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.unir.teamapp.persist.repository.common.CustomJpaRepository;
 import com.unir.teamapp.persist.entity.UsuarioEquipo;
+import com.unir.teamapp.persist.repository.common.CustomJpaRepository;
 
 @Repository("usuarioEquipoRepository")
 public interface UsuarioEquipoRepository extends CustomJpaRepository<UsuarioEquipo, Integer> {
@@ -17,4 +18,5 @@ public interface UsuarioEquipoRepository extends CustomJpaRepository<UsuarioEqui
   @Query("SELECT ue FROM UsuarioEquipo ue WHERE ue.equipo.id = :id")
   List<UsuarioEquipo> findByEquipoId(Integer id);
 
+  Optional<UsuarioEquipo> findByUsuarioIdAndEquipoId(Integer usuarioId, Integer equipoId);
 }

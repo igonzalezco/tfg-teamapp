@@ -7,7 +7,7 @@ import com.unir.teamapp.api.dto.FiltersDTO;
 
 public interface EventoService {
 
-  EventoDTO crearEvento(EventoDTO evento);
+  EventoDTO crearEvento(Integer equipoId, EventoDTO evento);
 
   Page<EventoDTO> obtenerEventos(Integer equipoId, FiltersDTO filtros);
 

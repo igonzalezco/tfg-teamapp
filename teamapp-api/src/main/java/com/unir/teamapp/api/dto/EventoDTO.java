@@ -7,12 +7,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,16 +31,12 @@ public class EventoDTO extends BaseDTO implements Serializable {
     @NotBlank
     private String titulo;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @NotBlank
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @NotNull
     private LocalDateTime fechaInicio;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @NotBlank
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @NotNull
     private LocalDateTime fechaFin;
 
     private Boolean allDay;

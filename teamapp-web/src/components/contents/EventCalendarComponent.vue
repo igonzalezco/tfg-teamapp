@@ -1,9 +1,16 @@
 <template>
-  <FullCalendar :options="calendarOptions" />
+  <div class="event-calendar">
+    <div v-if="loading" class="event-calendar__state">
+      {{ t('common.loading') }}
+    </div>
+
+    <FullCalendar :options="calendarOptions" />
+  </div>
 </template>
 
 <script setup>
   import { computed } from 'vue'
+  import { useI18n } from 'vue-i18n'
   import FullCalendar from '@fullcalendar/vue3'
   import dayGridPlugin from '@fullcalendar/daygrid'
   import timeGridPlugin from '@fullcalendar/timegrid'
@@ -15,32 +22,40 @@
       type: Array,
       default: () => [],
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   })
 
-  const emit = defineEmits(['select-event'])
+  const emit = defineEmits(['range-change'])
+
+  const { t } = useI18n()
 
   const calendarOptions = computed(() => ({
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    initialView: 'dayGridMonth',
     locale: esLocale,
+    initialView: 'dayGridMonth',
     height: 'auto',
+    firstDay: 1,
+    weekends: true,
+    events: props.events,
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
     buttonText: {
-      today: 'Hoy',
-      month: 'Mes',
-      week: 'Semana',
-      day: 'Día',
+      today: t('calendar.today'),
+      month: t('calendar.month'),
+      week: t('calendar.week'),
+      day: t('calendar.day'),
     },
-    firstDay: 1,
-    weekends: true,
-    events: props.events,
-    eventClick(info) {
-      emit('select-event', {
-        id: info.event.id,
+    datesSet(info) {
+      emit('range-change', {
+        start: info.startStr,
+        end: info.endStr,
+        viewType: info.view.type,
       })
     },
   }))

@@ -9,9 +9,7 @@ class TeamService {
 
   createTeam(team) {
     var _self = this
-    return request.post(_self.baseUrl + 'api/equipos', team, {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return request.post(_self.baseUrl + 'api/equipos', team)
   }
 
   deleteTeam(id) {

@@ -1,5 +1,7 @@
 package com.unir.teamapp.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
@@ -8,15 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unir.teamapp.api.dto.EventoDTO;
 import com.unir.teamapp.api.dto.FiltersDTO;
+import com.unir.teamapp.api.exceptions.CustomException;
 import com.unir.teamapp.api.security.SecurityUtils;
+import com.unir.teamapp.api.service.EquipoService;
 import com.unir.teamapp.api.service.EventoService;
 import com.unir.teamapp.mapping.EventoMapper;
-import com.unir.teamapp.mapping.UsuarioEquipoMapper;
+import com.unir.teamapp.persist.entity.Equipo;
 import com.unir.teamapp.persist.entity.Evento;
+import com.unir.teamapp.persist.repository.jpa.EquipoRepository;
 import com.unir.teamapp.persist.repository.jpa.EventoRepository;
 import com.unir.teamapp.persist.repository.jpa.PermisoRepository;
 import com.unir.teamapp.persist.repository.jpa.UsuarioEquipoRepository;
-import com.unir.teamapp.persist.repository.jpa.UsuarioRepository;
 import com.unir.teamapp.persist.util.filter.FilterManagement;
 import com.unir.teamapp.persist.util.filter.SpecificationFilter;
 import com.unir.teamapp.persist.util.filter.expression.ExpressionType;
@@ -32,7 +36,9 @@ public class EventoServiceImpl implements EventoService {
 
   private final UsuarioEquipoRepository usuarioEquipoRepository;
 
-  private final UsuarioRepository usuarioRepository;
+  private final EquipoRepository equipoRepository;
+
+  private final EquipoService equipoService;
 
   private final PermisoRepository permisoRepository;
 
@@ -40,12 +46,23 @@ public class EventoServiceImpl implements EventoService {
 
   private final EventoMapper eventoMapper;
 
-  private final UsuarioEquipoMapper usuarioEquipoMapper;
-
   @Override
-  public EventoDTO crearEvento(EventoDTO evento) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'crearEvento'");
+  public EventoDTO crearEvento(Integer equipoId, EventoDTO eventoDTO) {
+
+    equipoService.checkGestionEquipoForSessionUser(equipoId);
+
+    validateCreateEvent(eventoDTO);
+
+    final Equipo equipo = equipoRepository.findById(equipoId)
+        .orElseThrow(() -> new CustomException("No existe el equipo indicado."));
+
+    final Evento event = eventoMapper.toEntity(eventoDTO);
+    event.setEquipo(equipo);
+    event.setCreatedAt(LocalDateTime.now());
+
+    final Evento savedEvent = eventoRepository.save(event);
+
+    return eventoMapper.asEventoDTO(savedEvent);
   }
 
   @Override
@@ -64,6 +81,12 @@ public class EventoServiceImpl implements EventoService {
   public void eliminarEvento(Integer equiopIdId, Integer eventoId) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'eliminarEvento'");
+  }
+
+  private void validateCreateEvent(final EventoDTO eventoDTO) {
+    if (eventoDTO.getFechaFin().isBefore(eventoDTO.getFechaInicio())) {
+      throw new CustomException("La fecha de fin no puede ser anterior a la fecha de inicio.");
+    }
   }
 
 }

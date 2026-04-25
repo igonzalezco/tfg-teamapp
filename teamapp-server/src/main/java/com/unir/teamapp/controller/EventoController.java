@@ -36,7 +36,7 @@ public class EventoController {
   })
   public EventoDTO crearEvento(@PathVariable final Integer equipoId,
       @Valid @RequestBody final EventoDTO eventoDto) {
-    return eventoService.crearEvento(eventoDto);
+    return eventoService.crearEvento(equipoId, eventoDto);
   }
 
   @PostMapping(value = "/api/equipos/{equipoId}/eventos/search", produces = MediaType.APPLICATION_JSON_VALUE)

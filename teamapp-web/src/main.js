@@ -9,8 +9,12 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import es from 'element-plus/es/locale/lang/es'
+import dayjs from 'dayjs'
+import 'dayjs/locale/es'
 
 import Notifications from '@kyvg/vue3-notification'
+
+dayjs.locale('es')
 
 const app = createApp(App)
 

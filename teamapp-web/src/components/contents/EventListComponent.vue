@@ -1,48 +1,95 @@
 <template>
   <div class="event-list">
     <div class="event-list__header">
-      <h2 class="event-list__title">Eventos</h2>
+      <h2 class="event-list__title">{{ t('event.list.title') }}</h2>
+      <span class="app-badge">{{ total }}</span>
     </div>
 
-    <div v-if="loading" class="event-list__state">Cargando eventos...</div>
+    <div v-if="loading" class="event-list__state">
+      {{ t('common.loading') }}
+    </div>
 
-    <div v-else-if="!events.length" class="event-list__state">No hay eventos para este equipo.</div>
+    <div v-else-if="!items.length" class="event-list__state">
+      {{ t('event.list.empty') }}
+    </div>
 
     <div v-else class="event-list__items">
-      <button
-        v-for="event in events"
-        :key="event.id"
-        type="button"
-        class="event-list__item"
-        :class="{ 'event-list__item--active': Number(selectedEventId) === Number(event.id) }"
-        @click="$emit('select', event)"
-      >
+      <article v-for="item in items" :key="item.id" class="event-list__item">
         <div class="event-list__item-main">
-          <span class="event-list__item-title">{{ event.titulo }}</span>
-          <span class="event-list__item-date">
-            {{ event.fechaInicio }}
-          </span>
+          <h3 class="event-list__item-title">{{ item.titulo }}</h3>
+
+          <div class="event-list__item-meta">
+            <span>{{ formatDate(item.fechaInicio) }}</span>
+            <span v-if="item.fechaFin">{{ formatDate(item.fechaFin) }}</span>
+            <span v-if="item.ubicacion">{{ item.ubicacion }}</span>
+          </div>
+
+          <p v-if="item.descripcion" class="event-list__item-description">
+            {{ item.descripcion }}
+          </p>
         </div>
-      </button>
+      </article>
+    </div>
+
+    <div class="event-list__pagination">
+      <el-pagination
+        background
+        layout="total, sizes, prev, pager, next"
+        :total="total"
+        :current-page="page + 1"
+        :page-size="limit"
+        :page-sizes="[5, 10, 20, 50]"
+        @current-change="onCurrentChange"
+        @size-change="onSizeChange"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
+  import dayjs from 'dayjs'
+  import { useI18n } from 'vue-i18n'
+
   defineProps({
-    events: {
+    items: {
       type: Array,
       default: () => [],
+    },
+    page: {
+      type: Number,
+      default: 0,
+    },
+    limit: {
+      type: Number,
+      default: 10,
+    },
+    total: {
+      type: Number,
+      default: 0,
     },
     loading: {
       type: Boolean,
       default: false,
     },
-    selectedEventId: {
-      type: [String, Number, null],
-      default: null,
-    },
   })
 
-  defineEmits(['select'])
+  const emit = defineEmits(['page-change', 'limit-change'])
+
+  const { t } = useI18n()
+
+  const onCurrentChange = (currentPage) => {
+    emit('page-change', currentPage - 1)
+  }
+
+  const onSizeChange = (pageSize) => {
+    emit('limit-change', pageSize)
+  }
+
+  const formatDate = (value) => {
+    if (!value) {
+      return ''
+    }
+
+    return dayjs(value).format('DD/MM/YYYY HH:mm')
+  }
 </script>

@@ -85,4 +85,16 @@ public class EquipoServiceImpl implements EquipoService {
 
     equipo.setDeletedAt(LocalDateTime.now());
   }
+
+  @Override
+  public void checkGestionEquipoForSessionUser(Integer equipoId) {
+    final UserDetailsDTO sessionUser = securityUtils.getCurrentUser();
+    UsuarioEquipo ue = usuarioEquipoRepository.findByUsuarioIdAndEquipoId(sessionUser.getUserId(), equipoId)
+        .orElseThrow(() -> new CustomException("El usuario no pertenece al equipo"));
+
+    if (!AppConstants.PERMISO_ADMINISTRADOR.equals(ue.getPermiso().getCodigo())
+        && !AppConstants.PERMISO_STAFF.equals(ue.getPermiso().getCodigo())) {
+      throw new CustomException("El usuario no tiene permisos para crear eventos");
+    }
+  }
 }
