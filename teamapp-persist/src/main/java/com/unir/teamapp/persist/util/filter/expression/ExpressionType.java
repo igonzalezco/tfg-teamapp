@@ -4,9 +4,9 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public enum ExpressionType {
-  CONTAINS("contains"), EQUALS("eq"), NOT_EQUALS("ne"), GREATER_THAN("gt"), LESS_THAN("lt"), GREATER_OR_EQUALS("gte"),
-  LESS_OR_EQUALS("lte"), LIKE("like"), IN("in", true), NOT_IN("nin", true), IS_NULL("isnull"), IS_NOT_NULL("isnotnull"),
-  BETWEEN("between");
+  CONTAINS("CONTAINS"), EQUALS("EQUALS"), NOT_EQUALS("NOT_EQUALS"), GREATER_THAN("GT"), LESS_THAN("LT"),
+  GREATER_OR_EQUALS("GTE"), LESS_OR_EQUALS("LTE"), LIKE("LIKE"), IN("IN", true), NOT_IN("NOT_IN", true),
+  IS_NULL("IS_NULL"), IS_NOT_NULL("IS_NOT_NULL"), BETWEEN("BETWEEN");
 
   private final String value;
   private final Boolean multiple;
@@ -26,7 +26,7 @@ public enum ExpressionType {
     if (ExpressionType.filterNames.isEmpty() && ExpressionType.filterNames.containsKey(expressionType)) {
       return ExpressionType.filterNames.get(expressionType);
     }
-    return expressionType.name();
+    return expressionType.value;
   }
 
   public boolean isMultiple() {
@@ -69,6 +69,7 @@ public enum ExpressionType {
     values.put(ExpressionType.LESS_THAN, ExpressionType.getValue(ExpressionType.LESS_THAN));
     values.put(ExpressionType.LESS_OR_EQUALS, ExpressionType.getValue(ExpressionType.LESS_OR_EQUALS));
     values.put(ExpressionType.EQUALS, ExpressionType.getValue(ExpressionType.EQUALS));
+    values.put(ExpressionType.NOT_EQUALS, ExpressionType.getValue(ExpressionType.NOT_EQUALS));
     values.put(ExpressionType.GREATER_THAN, ExpressionType.getValue(ExpressionType.GREATER_THAN));
     values.put(ExpressionType.GREATER_OR_EQUALS, ExpressionType.getValue(ExpressionType.GREATER_OR_EQUALS));
     return values;
@@ -93,6 +94,8 @@ public enum ExpressionType {
     values.put(ExpressionType.LESS_THAN, ExpressionType.getValue(ExpressionType.LESS_THAN));
     values.put(ExpressionType.LESS_OR_EQUALS, ExpressionType.getValue(ExpressionType.LESS_OR_EQUALS));
     values.put(ExpressionType.EQUALS, ExpressionType.getValue(ExpressionType.EQUALS));
+    values.put(ExpressionType.GREATER_THAN, ExpressionType.getValue(ExpressionType.GREATER_THAN));
+    values.put(ExpressionType.GREATER_OR_EQUALS, ExpressionType.getValue(ExpressionType.GREATER_OR_EQUALS));
     return values;
   }
 

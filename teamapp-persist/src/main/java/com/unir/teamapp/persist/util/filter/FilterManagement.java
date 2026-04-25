@@ -131,7 +131,7 @@ public class FilterManagement<T extends BaseEntity> {
     final String tipo = filtro.getTipo();
 
     return switch (tipo) {
-      case "string" -> mapStringExpression(filtro.getExpression());
+      case "string" -> mapStringComparison(filtro.getExpression());
       case "integer", "long", "double", "float" -> mapNumericComparison(filtro.getExpression());
       case "list" -> ExpressionType.IN;
       case "boolean" -> ExpressionType.EQUALS;
@@ -141,36 +141,28 @@ public class FilterManagement<T extends BaseEntity> {
     };
   }
 
-  private ExpressionType mapStringExpression(final String expresion) {
-    return switch (expresion) {
-      case "CONTAINS" -> ExpressionType.CONTAINS;
-      case "EQUALS" -> ExpressionType.EQUALS;
-      case "IS_NULL" -> ExpressionType.IS_NULL;
-      case "IS_NOT_NULL" -> ExpressionType.IS_NOT_NULL;
-      case "NOT_EQUALS" -> ExpressionType.NOT_EQUALS;
-      default -> ExpressionType.EQUALS;
-    };
+  private ExpressionType mapStringComparison(final String expresion) {
+    if (ExpressionType.getTextFilters().containsValue(expresion)) {
+      return ExpressionType.getExpressionType(expresion);
+    } else {
+      return ExpressionType.EQUALS;
+    }
   }
 
   private ExpressionType mapNumericComparison(final String comparacion) {
-    return switch (comparacion) {
-      case "EQUALS" -> ExpressionType.EQUALS;
-      case "LT" -> ExpressionType.LESS_THAN;
-      case "LTE" -> ExpressionType.LESS_OR_EQUALS;
-      case "GT" -> ExpressionType.GREATER_THAN;
-      case "GTE" -> ExpressionType.GREATER_OR_EQUALS;
-      case "NOT_EQUALS" -> ExpressionType.NOT_EQUALS;
-      default -> ExpressionType.EQUALS;
-    };
+    if (ExpressionType.getNumericFilters().containsValue(comparacion)) {
+      return ExpressionType.getExpressionType(comparacion);
+    } else {
+      return ExpressionType.EQUALS;
+    }
   }
 
   private ExpressionType mapDateComparison(final String comparacion) {
-    return switch (comparacion) {
-      case "on" -> ExpressionType.EQUALS;
-      case "after" -> ExpressionType.GREATER_THAN;
-      case "before" -> ExpressionType.LESS_THAN;
-      default -> ExpressionType.EQUALS;
-    };
+    if (ExpressionType.getDateFilters().containsValue(comparacion)) {
+      return ExpressionType.getExpressionType(comparacion);
+    } else {
+      return ExpressionType.EQUALS;
+    }
   }
 
   public Object returnRealValue(final FilterDTO filtro) throws ParseException {
@@ -183,14 +175,8 @@ public class FilterManagement<T extends BaseEntity> {
       case "integer" -> Integer.parseInt(valor);
       case "list" -> Arrays.asList(valor.split(","));
       case "boolean" -> Boolean.parseBoolean(valor);
-      case "date" -> {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = LocalDate.parse(valor, formatter);
-        yield date.atStartOfDay();
-      }
-      case "dateTime" -> {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        yield LocalDateTime.parse(valor, formatter);
+      case "date", "dateTime" -> {
+        yield LocalDateTime.parse(valor, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
       }
       case "double" -> Double.parseDouble(valor);
       case "float" -> Float.parseFloat(valor);
