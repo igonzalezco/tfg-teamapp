@@ -22,6 +22,10 @@ class EventService {
   deleteEvent(teamId, eventId) {
     return request.delete(`${this.baseUrl}api/equipos/${teamId}/eventos/${eventId}`)
   }
+
+  updateEvent(teamId, eventId, eventData) {
+    return request.put(`${this.baseUrl}api/equipos/${teamId}/eventos/${eventId}`, eventData)
+  }
 }
 
 export default EventService

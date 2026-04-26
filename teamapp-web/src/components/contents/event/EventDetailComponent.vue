@@ -2,7 +2,19 @@
   <div class="event-detail-page">
     <el-page-header class="event-detail-header" title=" " @back="goBack">
       <template #content>
-        <h1 class="page__title">{{ t('event.detail.title') }}</h1>
+        <div class="event-detail-header__content">
+          <h1 class="page__title">{{ t('event.detail.title') }}</h1>
+
+          <el-button
+            v-if="canManageEvent"
+            class="event-detail-header__edit-button"
+            @click="goToEdit"
+          >
+            <el-icon>
+              <EditPen />
+            </el-icon>
+          </el-button>
+        </div>
       </template>
 
       <template #extra>
@@ -72,15 +84,13 @@
       <p>{{ t('event.delete.confirmText') }}</p>
 
       <template #footer>
-        <div class="event-delete-dialog__actions">
-          <el-button @click="deleteDialogVisible = false">
-            {{ t('common.cancel') }}
-          </el-button>
+        <el-button @click="deleteDialogVisible = false">
+          {{ t('common.cancel') }}
+        </el-button>
 
-          <el-button type="danger" :loading="deleting" @click="confirmDelete">
-            {{ t('common.delete') }}
-          </el-button>
-        </div>
+        <el-button type="danger" :loading="deleting" @click="confirmDelete">
+          {{ t('common.delete') }}
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -91,6 +101,7 @@
   import dayjs from 'dayjs'
   import { useRouter } from 'vue-router'
   import { useI18n } from 'vue-i18n'
+  import { EditPen } from '@element-plus/icons-vue'
   import services from '@/services/services'
   import { hasTeamPermission } from '@/utils/permissions'
 
@@ -130,6 +141,19 @@
       name: 'events',
       params: {
         id: props.teamId,
+      },
+    })
+  }
+
+  const goToEdit = () => {
+    router.push({
+      name: 'editEvent',
+      params: {
+        id: props.teamId,
+        eventId: props.eventId,
+      },
+      query: {
+        returnTo: 'detail',
       },
     })
   }

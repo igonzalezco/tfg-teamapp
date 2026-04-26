@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,8 +67,19 @@ public class EventoController {
       @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
       @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
   })
-  public void deleteEvento(@PathVariable final Integer equipoId, @PathVariable final Integer eventoId) {
+  public void EliminarEvento(@PathVariable final Integer equipoId, @PathVariable final Integer eventoId) {
     eventoService.eliminarEvento(equipoId, eventoId);
+  }
+
+  @PutMapping(value = "/api/equipos/{equipoId}/eventos/{eventoId}")
+  @Operation(summary = "Modifica un evento", description = "Se modifica un evento.", responses = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
+      @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
+  })
+  public EventoDTO actualizarEvento(@PathVariable final Integer equipoId, @PathVariable final Integer eventoId,
+      @Valid @RequestBody final EventoDTO eventoDTO) {
+    return eventoService.actualizarEvento(equipoId, eventoId, eventoDTO);
   }
 
 }

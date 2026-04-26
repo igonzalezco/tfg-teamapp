@@ -31,9 +31,11 @@
           :limit="limit"
           :total="total"
           :loading="loading"
+          :can-manage-events="canManageEvents"
           @page-change="handlePageChange"
           @limit-change="handleLimitChange"
           @detail="goToEventDetail"
+          @edit="goToEditEvent"
         />
       </section>
 
@@ -125,6 +127,19 @@
       params: {
         id: props.teamId,
         eventId,
+      },
+    })
+  }
+
+  const goToEditEvent = (eventId) => {
+    router.push({
+      name: 'editEvent',
+      params: {
+        id: props.teamId,
+        eventId,
+      },
+      query: {
+        returnTo: 'list',
       },
     })
   }

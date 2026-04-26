@@ -77,6 +77,15 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: 'equipos/:id/eventos/:eventId/editar',
+        name: 'editEvent',
+        component: () => import('@/views/EditEventView.vue'),
+        props: true,
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 ]

@@ -29,7 +29,17 @@
 
         <div class="event-card__actions">
           <el-button class="event-card__action-button" @click="$emit('detail', item.id)">
-            {{ t('event.actions.detail') }}
+            <el-icon><Postcard /></el-icon>
+            <span>{{ t('event.actions.detail') }}</span>
+          </el-button>
+
+          <el-button
+            v-if="canManageEvents"
+            class="event-card__action-button"
+            @click="$emit('edit', item.id)"
+          >
+            <el-icon><EditPen /></el-icon>
+            <span>{{ t('event.actions.edit') }}</span>
           </el-button>
         </div>
       </article>
@@ -53,6 +63,7 @@
 <script setup>
   import dayjs from 'dayjs'
   import { useI18n } from 'vue-i18n'
+  import { EditPen, Postcard } from '@element-plus/icons-vue'
 
   defineProps({
     items: {
@@ -75,9 +86,13 @@
       type: Boolean,
       default: false,
     },
+    canManageEvents: {
+      type: Boolean,
+      default: false,
+    },
   })
 
-  const emit = defineEmits(['page-change', 'limit-change', 'detail'])
+  const emit = defineEmits(['page-change', 'limit-change', 'detail', 'edit'])
 
   const { t } = useI18n()
 

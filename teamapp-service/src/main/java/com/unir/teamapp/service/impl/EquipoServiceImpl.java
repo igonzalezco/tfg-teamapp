@@ -103,7 +103,7 @@ public class EquipoServiceImpl implements EquipoService {
 
     if (!AppConstants.PERMISO_ADMINISTRADOR.equals(ue.getPermiso().getCodigo())
         && !AppConstants.PERMISO_STAFF.equals(ue.getPermiso().getCodigo())) {
-      throw new CustomException("El usuario no tiene permisos para crear eventos");
+      throw new CustomException("El usuario no tiene permisos para gestionar eventos");
     }
   }
 

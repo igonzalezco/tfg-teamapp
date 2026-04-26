@@ -43,7 +43,7 @@ public class EventoServiceImpl implements EventoService {
 
     equipoService.checkGestionEquipoForSessionUser(equipoId);
 
-    validateCreateEvent(eventoDTO);
+    validateDatesEvent(eventoDTO);
 
     final Equipo equipo = equipoRepository.findById(equipoId)
         .orElseThrow(() -> new CustomException("No existe el equipo indicado."));
@@ -96,7 +96,24 @@ public class EventoServiceImpl implements EventoService {
     eventoRepository.save(evento);
   }
 
-  private void validateCreateEvent(final EventoDTO eventoDTO) {
+  @Override
+  public EventoDTO actualizarEvento(Integer equipoId, Integer eventoId, EventoDTO eventoDTO) {
+    equipoService.checkGestionEquipoForSessionUser(equipoId);
+
+    final Evento evento = eventoRepository
+        .findByIdAndEquipoIdAndDeletedAtIsNull(eventoId, equipoId)
+        .orElseThrow(() -> new CustomException("No existe el evento indicado para ese equipo."));
+
+    validateDatesEvent(eventoDTO);
+
+    eventoMapper.updateFromDTO(eventoDTO, evento);
+
+    final Evento savedEvento = eventoRepository.save(evento);
+
+    return eventoMapper.asEventoDTO(savedEvento);
+  }
+
+  private void validateDatesEvent(final EventoDTO eventoDTO) {
     if (eventoDTO.getFechaFin().isBefore(eventoDTO.getFechaInicio())) {
       throw new CustomException("La fecha de fin no puede ser anterior a la fecha de inicio.");
     }
