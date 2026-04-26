@@ -2,6 +2,7 @@ package com.unir.teamapp.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,8 @@ public class EquipoServiceImpl implements EquipoService {
     final Usuario usuario = usuarioRepository.findByEmail(sessionUser.getUsername())
         .orElseThrow(() -> new CustomException("Usuario no encontrado", HttpStatus.NOT_FOUND));
 
-    if (equipoRepository.existsByNombreIgnoreCase(equipo.getNombre())) {
+    Optional<Equipo> optionalEquipoBD = equipoRepository.getByNombreIgnoreCase(equipo.getNombre());
+    if (optionalEquipoBD.isPresent() && !optionalEquipoBD.get().isArchived()) {
       throw new CustomException("Ya existe un equipo con ese nombre", HttpStatus.BAD_REQUEST);
     }
 
@@ -62,7 +64,11 @@ public class EquipoServiceImpl implements EquipoService {
             "No se ha encontrado el permiso de administrador de equipo"));
 
     Equipo equipoBD = equipoMapper.toEntity(equipo);
-    equipoBD.setCreatedAt(LocalDateTime.now());
+    if (optionalEquipoBD.isPresent()) {
+      equipoMapper.updateFromDeleted(optionalEquipoBD.get(), equipoBD);
+    } else {
+      equipoBD.setCreatedAt(LocalDateTime.now());
+    }
 
     equipoBD = equipoRepository.save(equipoBD);
 
@@ -74,7 +80,9 @@ public class EquipoServiceImpl implements EquipoService {
 
   @Override
   public void eliminarEquipo(Integer equipoId) {
-    Equipo equipo = equipoRepository.findById(equipoId).orElseThrow(() -> new CustomException(
+    this.checkGestionEquipoForSessionUser(equipoId);
+
+    final Equipo equipo = equipoRepository.findById(equipoId).orElseThrow(() -> new CustomException(
         "No se ha encontrado el equipo"));
 
     List<UsuarioEquipo> relaciones = usuarioEquipoRepository.findByEquipoId(equipoId);
@@ -83,7 +91,8 @@ public class EquipoServiceImpl implements EquipoService {
       usuarioEquipoRepository.delete(relacion);
     }
 
-    equipo.setDeletedAt(LocalDateTime.now());
+    equipo.archive();
+    equipoRepository.save(equipo);
   }
 
   @Override
@@ -96,5 +105,12 @@ public class EquipoServiceImpl implements EquipoService {
         && !AppConstants.PERMISO_STAFF.equals(ue.getPermiso().getCodigo())) {
       throw new CustomException("El usuario no tiene permisos para crear eventos");
     }
+  }
+
+  @Override
+  public boolean checkEquipoForSessionUser(Integer equipoId) {
+    final UserDetailsDTO sessionUser = securityUtils.getCurrentUser();
+    return usuarioEquipoRepository.findByUsuarioIdAndEquipoId(sessionUser.getUserId(), equipoId)
+        .isPresent();
   }
 }

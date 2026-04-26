@@ -444,7 +444,6 @@ ALTER TABLE usuario_equipo ADD CONSTRAINT fk_usuario_equipo_permiso_id FOREIGN K
 
 CREATE UNIQUE INDEX ux_encuesta_titulo ON encuesta(titulo);
 CREATE UNIQUE INDEX ux_equipo_nombre ON equipo(nombre);
-CREATE UNIQUE INDEX ux_evento_titulo ON evento(titulo);
 CREATE UNIQUE INDEX ux_jugador_nombre ON jugador(nombre);
 CREATE UNIQUE INDEX ux_necesidad_nombre ON necesidad(nombre);
 CREATE UNIQUE INDEX ux_noticia_titulo ON noticia(titulo);
@@ -452,5 +451,6 @@ CREATE UNIQUE INDEX ux_permiso_codigo ON permiso(codigo);
 CREATE UNIQUE INDEX ux_posicion_codigo ON posicion(codigo);
 CREATE UNIQUE INDEX ux_rol_email ON rol(codigo);
 CREATE UNIQUE INDEX ux_usuario_email ON usuario(email);
+CREATE INDEX ix_evento_titulo ON evento(titulo);
 
 END;

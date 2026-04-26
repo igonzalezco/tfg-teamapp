@@ -131,7 +131,7 @@ public class FilterManagement<T extends BaseEntity> {
     final String tipo = filtro.getTipo();
 
     return switch (tipo) {
-      case "string" -> mapStringComparison(filtro.getExpression());
+      case "string" -> mapStringComparison(filtro.getComparacion());
       case "integer", "long", "double", "float" -> mapNumericComparison(filtro.getExpression());
       case "list" -> ExpressionType.IN;
       case "boolean" -> ExpressionType.EQUALS;

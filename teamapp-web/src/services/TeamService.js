@@ -8,13 +8,11 @@ class TeamService {
   }
 
   createTeam(team) {
-    var _self = this
-    return request.post(_self.baseUrl + 'api/equipos', team)
+    return request.post(`${this.baseUrl}api/equipos`, team)
   }
 
   deleteTeam(id) {
-    var _self = this
-    return request.delete(_self.baseUrl + 'api/equipos/' + id)
+    return request.delete(`${this.baseUrl}api/equipos/${id}`)
   }
 }
 

@@ -8,13 +8,11 @@ class UsuarioService {
   }
 
   login(usuario) {
-    var _self = this
-    return request.post(_self.baseUrl + 'login', usuario)
+    return request.post(`${this.baseUrl}login`, usuario)
   }
 
   register(usuario) {
-    var _self = this
-    return request.post(_self.baseUrl + 'registro', usuario)
+    return request.post(`${this.baseUrl}registro`, usuario)
   }
 }
 

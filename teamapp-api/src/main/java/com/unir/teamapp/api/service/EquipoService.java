@@ -10,4 +10,6 @@ public interface EquipoService {
   void eliminarEquipo(Integer equipo);
 
   void checkGestionEquipoForSessionUser(Integer equipoId);
+
+  boolean checkEquipoForSessionUser(Integer equipoId);
 }
