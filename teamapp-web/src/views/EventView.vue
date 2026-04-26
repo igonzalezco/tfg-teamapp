@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-  import EventComponent from '@/components/contents/EventComponent.vue'
+  import EventComponent from '@/components/contents/event/EventComponent.vue'
 
   defineProps({
     id: {

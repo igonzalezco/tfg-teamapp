@@ -28,7 +28,7 @@
     },
   })
 
-  const emit = defineEmits(['range-change'])
+  const emit = defineEmits(['range-change', 'event-click', 'date-click'])
 
   const { t } = useI18n()
 
@@ -55,6 +55,17 @@
       emit('range-change', {
         start: info.startStr,
         end: info.endStr,
+        viewType: info.view.type,
+      })
+    },
+    eventClick(info) {
+      emit('event-click', info.event.id)
+    },
+    dateClick(info) {
+      emit('date-click', {
+        date: info.date,
+        dateStr: info.dateStr,
+        allDay: info.allDay,
         viewType: info.view.type,
       })
     },

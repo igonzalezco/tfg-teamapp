@@ -8,12 +8,19 @@ class EventService {
   }
 
   getTeamEvents(teamId, query) {
-    var _self = this
-    return request.post(`${_self.baseUrl}api/equipos/${teamId}/eventos/search`, query)
+    return request.post(`${this.baseUrl}api/equipos/${teamId}/eventos/search`, query)
   }
 
   createEvent(teamId, eventData) {
     return request.post(`${this.baseUrl}api/equipos/${teamId}/eventos`, eventData)
+  }
+
+  getEventDetail(teamId, eventId) {
+    return request.get(`${this.baseUrl}api/equipos/${teamId}/eventos/${eventId}`)
+  }
+
+  deleteEvent(teamId, eventId) {
+    return request.delete(`${this.baseUrl}api/equipos/${teamId}/eventos/${eventId}`)
   }
 }
 

@@ -13,20 +13,24 @@
       {{ t('event.list.empty') }}
     </div>
 
-    <div v-else class="event-list__items">
-      <article v-for="item in items" :key="item.id" class="event-list__item">
-        <div class="event-list__item-main">
-          <h3 class="event-list__item-title">{{ item.titulo }}</h3>
+    <div v-else class="event-list__cards">
+      <article v-for="item in items" :key="item.id" class="event-card">
+        <div class="event-card__content">
+          <div class="event-card__header">
+            <h3 class="event-card__title">{{ item.titulo }}</h3>
+          </div>
 
-          <div class="event-list__item-meta">
+          <div class="event-card__meta">
             <span>{{ formatDate(item.fechaInicio) }}</span>
             <span v-if="item.fechaFin">{{ formatDate(item.fechaFin) }}</span>
             <span v-if="item.ubicacion">{{ item.ubicacion }}</span>
           </div>
+        </div>
 
-          <p v-if="item.descripcion" class="event-list__item-description">
-            {{ item.descripcion }}
-          </p>
+        <div class="event-card__actions">
+          <el-button class="event-card__action-button" @click="$emit('detail', item.id)">
+            {{ t('event.actions.detail') }}
+          </el-button>
         </div>
       </article>
     </div>
@@ -73,7 +77,7 @@
     },
   })
 
-  const emit = defineEmits(['page-change', 'limit-change'])
+  const emit = defineEmits(['page-change', 'limit-change', 'detail'])
 
   const { t } = useI18n()
 

@@ -68,6 +68,15 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: 'equipos/:id/eventos/:eventId',
+        name: 'eventDetail',
+        component: () => import('@/views/EventDetailView.vue'),
+        props: true,
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 ]

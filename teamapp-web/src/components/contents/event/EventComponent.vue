@@ -7,7 +7,7 @@
       </div>
 
       <div class="event-page__header-actions">
-        <el-button type="primary" @click="goToCreateEvent">
+        <el-button v-if="canManageEvents" type="primary" @click="goToCreateEvent">
           {{ t('event.actions.create') }}
         </el-button>
       </div>
@@ -33,6 +33,7 @@
           :loading="loading"
           @page-change="handlePageChange"
           @limit-change="handleLimitChange"
+          @detail="goToEventDetail"
         />
       </section>
 
@@ -41,6 +42,8 @@
           :events="calendarEvents"
           :loading="loading"
           @range-change="handleRangeChange"
+          @event-click="goToEventDetail"
+          @date-click="handleCalendarDateClick"
         />
       </section>
     </div>
@@ -52,10 +55,13 @@
   import { useI18n } from 'vue-i18n'
   import { useRouter } from 'vue-router'
   import FilterBuilderComponent from '@/components/filters/FilterBuilderComponent.vue'
-  import EventListComponent from '@/components/contents/EventListComponent.vue'
-  import EventCalendarComponent from '@/components/contents/EventCalendarComponent.vue'
+  import EventListComponent from '@/components/contents/event/EventListComponent.vue'
+  import EventCalendarComponent from '@/components/contents/event/EventCalendarComponent.vue'
   import eventFiltersConfig from '@/components/filters/configs/eventFilters.config'
   import services from '@/services/services'
+  import { hasTeamPermission } from '@/utils/permissions'
+
+  const MANAGE_EVENT_PERMISSIONS = ['ADMINISTRADOR', 'STAFF']
 
   const props = defineProps({
     teamId: {
@@ -92,6 +98,8 @@
     },
   })
 
+  const canManageEvents = computed(() => hasTeamPermission(MANAGE_EVENT_PERMISSIONS, props.teamId))
+
   const calendarEvents = computed(() =>
     calendarItems.value.map((event) => ({
       id: event.id,
@@ -107,6 +115,33 @@
       name: 'createEvent',
       params: {
         id: props.teamId,
+      },
+    })
+  }
+
+  const goToEventDetail = (eventId) => {
+    router.push({
+      name: 'eventDetail',
+      params: {
+        id: props.teamId,
+        eventId,
+      },
+    })
+  }
+
+  const handleCalendarDateClick = ({ dateStr, allDay }) => {
+    if (!canManageEvents.value) {
+      return
+    }
+
+    router.push({
+      name: 'createEvent',
+      params: {
+        id: props.teamId,
+      },
+      query: {
+        startDate: dateStr,
+        allDay: String(allDay),
       },
     })
   }
@@ -164,12 +199,11 @@
       const response = await services.eventService.getTeamEvents(props.teamId, buildFiltersDto())
       const data = response?.data || {}
 
-      pagedItems.value = data.content || []
-      calendarItems.value = data.content || []
-      total.value = data.totalElements || 0
+      pagedItems.value = data.content || data.items || []
+      calendarItems.value = data.calendarEvents || data.content || data.items || []
+      total.value = data.totalElements || data.total || 0
       page.value = data.number ?? page.value
       limit.value = data.size ?? limit.value
-
       initialized.value = true
     } finally {
       loading.value = false

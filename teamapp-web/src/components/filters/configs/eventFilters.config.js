@@ -7,7 +7,7 @@ export default [
     filter: {
       campo: 'titulo',
       tipo: 'string',
-      comparacion: 'LIKE',
+      comparacion: 'CONTAINS',
       expresion: null,
       joinType: null,
       entityJoinName: null,
@@ -24,7 +24,7 @@ export default [
     filter: {
       campo: 'ubicacion',
       tipo: 'string',
-      comparacion: 'LIKE',
+      comparacion: 'CONTAINS',
       expresion: null,
       joinType: null,
       entityJoinName: null,
@@ -41,7 +41,7 @@ export default [
     filter: {
       campo: 'allDay',
       tipo: 'boolean',
-      comparacion: 'EQUAL',
+      comparacion: 'EQUALS',
       expresion: null,
       joinType: null,
       entityJoinName: null,

@@ -11,5 +11,7 @@ public interface EventoService {
 
   Page<EventoDTO> obtenerEventos(Integer equipoId, FiltersDTO filtros);
 
+  EventoDTO obtenerEvento(Integer equipoId, Integer eventoId);
+
   void eliminarEvento(Integer equiopIdId, Integer eventoId);
 }

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +48,16 @@ public class EventoController {
   })
   public Page<EventoDTO> buscarEventos(@PathVariable final Integer equipoId, @RequestBody final FiltersDTO filtros) {
     return eventoService.obtenerEventos(equipoId, filtros);
+  }
+
+  @GetMapping(value = "/api/equipos/{equipoId}/eventos/{eventoId}")
+  @Operation(summary = "Obtiene un evento", description = "Se obtienen un evento en concreto", responses = {
+      @ApiResponse(responseCode = "200", description = "Success"),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Esto significa que el lado del cliente fallo en las validaciones de campos"),
+      @ApiResponse(responseCode = "500", description = "Internal server error - Esto es un error generico del servidor")
+  })
+  public EventoDTO obtenerEvento(@PathVariable final Integer equipoId, @PathVariable final Integer eventoId) {
+    return eventoService.obtenerEvento(equipoId, eventoId);
   }
 
   @DeleteMapping(value = "/api/equipos/{equipoId}/eventos/{eventoId}")

@@ -1,17 +1,10 @@
 <template>
   <div class="event-create-page">
-    <div class="page__header event-create-page__header">
-      <div>
+    <el-page-header class="event-create-header" title=" " @back="goBack">
+      <template #content>
         <h1 class="page__title">{{ t('event.create.title') }}</h1>
-        <p class="page__description">{{ t('event.create.description') }}</p>
-      </div>
-
-      <div class="event-create-page__header-actions">
-        <el-button @click="goBack">
-          {{ t('common.back') }}
-        </el-button>
-      </div>
-    </div>
+      </template>
+    </el-page-header>
 
     <section class="app-surface event-create-page__section">
       <el-form
@@ -82,9 +75,9 @@
 </template>
 
 <script setup>
-  import { reactive, ref } from 'vue'
+  import { onMounted, reactive, ref, watch } from 'vue'
   import dayjs from 'dayjs'
-  import { useRouter } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
   import { useI18n } from 'vue-i18n'
   import services from '@/services/services'
 
@@ -95,6 +88,7 @@
     },
   })
 
+  const route = useRoute()
   const router = useRouter()
   const { t } = useI18n()
 
@@ -108,6 +102,30 @@
     allDay: false,
     ubicacion: '',
   })
+
+  const normalizeStartValue = (value, allDay) => {
+    if (!value) {
+      return null
+    }
+
+    if (!allDay) {
+      return value
+    }
+
+    return dayjs(value).startOf('day').format('YYYY-MM-DDTHH:mm:ss')
+  }
+
+  const normalizeEndValue = (value, allDay) => {
+    if (!value) {
+      return null
+    }
+
+    if (!allDay) {
+      return value
+    }
+
+    return dayjs(value).endOf('day').format('YYYY-MM-DDTHH:mm:ss')
+  }
 
   const validateEndDate = (_rule, value, callback) => {
     if (!value || !form.fechaInicio) {
@@ -154,30 +172,6 @@
     ],
   }
 
-  const normalizeStartValue = (value, allDay) => {
-    if (!value) {
-      return null
-    }
-
-    if (!allDay) {
-      return value
-    }
-
-    return dayjs(value).startOf('day').format('YYYY-MM-DDTHH:mm:ss')
-  }
-
-  const normalizeEndValue = (value, allDay) => {
-    if (!value) {
-      return null
-    }
-
-    if (!allDay) {
-      return value
-    }
-
-    return dayjs(value).endOf('day').format('YYYY-MM-DDTHH:mm:ss')
-  }
-
   const buildPayload = () => ({
     titulo: form.titulo?.trim(),
     fechaInicio: normalizeStartValue(form.fechaInicio, form.allDay),
@@ -195,6 +189,32 @@
     })
   }
 
+  const applyStartDateFromQuery = () => {
+    const rawStartDate = route.query.startDate
+    const rawAllDay = route.query.allDay
+
+    if (!rawStartDate || Array.isArray(rawStartDate)) {
+      return
+    }
+
+    const isAllDay = rawAllDay === 'true' || (!rawAllDay && !rawStartDate.includes('T'))
+
+    form.allDay = isAllDay
+
+    if (isAllDay) {
+      const baseDate = dayjs(rawStartDate)
+
+      form.fechaInicio = baseDate.format('YYYY-MM-DD')
+      form.fechaFin = baseDate.format('YYYY-MM-DD')
+      return
+    }
+
+    const baseDateTime = dayjs(rawStartDate)
+
+    form.fechaInicio = baseDateTime.format('YYYY-MM-DDTHH:mm:ss')
+    form.fechaFin = baseDateTime.add(1, 'hour').format('YYYY-MM-DDTHH:mm:ss')
+  }
+
   const submitForm = async () => {
     const valid = await formRef.value.validate().catch(() => false)
 
@@ -206,10 +226,31 @@
 
     try {
       await services.eventService.createEvent(props.teamId, buildPayload())
-
       goBack()
     } finally {
       loading.value = false
     }
   }
+
+  watch(
+    () => form.allDay,
+    (newValue, oldValue) => {
+      if (newValue === oldValue || !form.fechaInicio || !form.fechaFin) {
+        return
+      }
+
+      if (newValue) {
+        form.fechaInicio = dayjs(form.fechaInicio).format('YYYY-MM-DD')
+        form.fechaFin = dayjs(form.fechaFin).format('YYYY-MM-DD')
+        return
+      }
+
+      form.fechaInicio = dayjs(form.fechaInicio).startOf('day').format('YYYY-MM-DDTHH:mm:ss')
+      form.fechaFin = dayjs(form.fechaFin).endOf('day').format('YYYY-MM-DDTHH:mm:ss')
+    }
+  )
+
+  onMounted(() => {
+    applyStartDateFromQuery()
+  })
 </script>
